@@ -1,21 +1,26 @@
 <template>
 	<view class="content">
 		<scroll-view scroll-y class="left-aside">
-			<view v-for="item in flist" :key="item.id" class="f-item b-b" :class="{active: item.id === currentId}" @click="tabtap(item)">
+			<view v-for="(item,index) in flist" :key="item.id" class="f-item b-b" :class="{active: index === current}" @click="tabtap(item,index)">
 				{{item.name}}
 			</view>
 		</scroll-view>
-		<scroll-view scroll-with-animation scroll-y class="right-aside" @scroll="asideScroll" :scroll-top="tabScrollTop">
-			<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
-				<text class="s-item">{{item.name}}</text>
-				<view class="t-list">
-					<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item" v-for="titem in tlist" :key="titem.id">
-						<image :src="titem.picture"></image>
-						<text>{{titem.name}}</text>
+		<swiper :current="current" vertical class="right-aside" @change="change">
+			<swiper-item v-for="item in flist" :key="item.id" class="s-list">
+				<scroll-view scroll-y style="height: 100%;">
+				<view v-for="s in item.slist" :key="s.id">
+					<text class="s-item">{{s.name}}</text>
+					<view class="t-list">
+						<view v-for="t in s.tlist" :key="t.id" @click="navToList(s.id, t.id)" class="t-item">
+							<image :src="t.picture"></image>
+							<text>{{t.name}}</text>
+						</view>
 					</view>
 				</view>
-			</view>
-		</scroll-view>
+				</scroll-view>
+			</swiper-item>
+			
+		</swiper>
 	</view>
 </template>
 
@@ -23,12 +28,9 @@
 	export default {
 		data() {
 			return {
-				sizeCalcState: false,
-				tabScrollTop: 0,
+				current: 0,
 				currentId: 1,
-				flist: [],
-				slist: [],
-				tlist: [],
+				flist: []
 			}
 		},
 		onLoad(){
@@ -39,49 +41,31 @@
 				let list = await this.$api.json('cateList');
 				list.forEach(item=>{
 					if(!item.pid){
+						let slist = [];
+						for (var i = 0; i < list.length; i++) {
+							if(list[i].pid === item.id){
+								let tlist = [];
+								for (var j = 0; j < list.length; j++) {
+									if(list[j].pid === list[i].id){
+										tlist.push(list[j]);
+									}
+								}
+								list[i].tlist = tlist;
+								slist.push(list[i]);
+							}
+						}
+						item.slist = slist;
 						this.flist.push(item);  //pid为父级id, 没有pid或者pid=0是一级分类
-					}else if(!item.picture){
-						this.slist.push(item); //没有图的是2级分类
-					}else{
-						this.tlist.push(item); //3级分类
 					}
 				}) 
 			},
 			//一级分类点击
-			tabtap(item){
-				if(!this.sizeCalcState){
-					this.calcSize();
-				}
-				
+			tabtap(item,index){
 				this.currentId = item.id;
-				let index = this.slist.findIndex(sitem=>sitem.pid === item.id);
-				this.tabScrollTop = this.slist[index].top;
+				this.current = index;
 			},
-			//右侧栏滚动
-			asideScroll(e){
-				if(!this.sizeCalcState){
-					this.calcSize();
-				}
-				let scrollTop = e.detail.scrollTop;
-				let tabs = this.slist.filter(item=>item.top <= scrollTop).reverse();
-				if(tabs.length > 0){
-					this.currentId = tabs[0].pid;
-				}
-			},
-			//计算右侧栏每个tab的高度等信息
-			calcSize(){
-				let h = 0;
-				this.slist.forEach(item=>{
-					let view = uni.createSelectorQuery().select("#main-" + item.id);
-					view.fields({
-						size: true
-					}, data => {
-						item.top = h;
-						h += data.height;
-						item.bottom = h;
-					}).exec();
-				})
-				this.sizeCalcState = true;
+			change(e){
+				this.current = e.detail.current;
 			},
 			navToList(sid, tid){
 				uni.navigateTo({
@@ -96,7 +80,7 @@
 	page,
 	.content {
 		height: 100%;
-		background-color: #f8f8f8;
+		background-color: #fff;
 	}
 
 	.content {
@@ -106,7 +90,7 @@
 		flex-shrink: 0;
 		width: 200upx;
 		height: 100%;
-		background-color: #fff;
+		background-color: #f8f8f8;
 	}
 	.f-item {
 		display: flex;
@@ -119,17 +103,16 @@
 		position: relative;
 		&.active{
 			color: $base-color;
-			background: #f8f8f8;
+			background: #fff;
 			&:before{
 				content: '';
 				position: absolute;
 				left: 0;
 				top: 50%;
 				transform: translateY(-50%);
-				height: 36upx;
-				width: 8upx;
+				height: 100upx;
+				width: 6upx;
 				background-color: $base-color;
-				border-radius: 0 4px 4px 0;
 				opacity: .8;
 			}
 		}
@@ -139,12 +122,13 @@
 		flex: 1;
 		overflow: hidden;
 		padding-left: 20upx;
+		min-height: 100%;
 	}
 	.s-item{
 		display: flex;
 		align-items: center;
 		height: 70upx;
-		padding-top: 8upx;
+		padding-top: 18upx;
 		font-size: 28upx;
 		color: $font-color-dark;
 	}
@@ -167,13 +151,13 @@
 		align-items: center;
 		flex-direction: column;
 		width: 176upx;
-		font-size: 26upx;
+		font-size: 24upx;
 		color: #666;
 		padding-bottom: 20upx;
 		
 		image{
-			width: 140upx;
-			height: 140upx;
+			width: 120upx;
+			height: 120upx;
 		}
 	}
 </style>
