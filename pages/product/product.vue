@@ -157,7 +157,7 @@
 			</view>
 			
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border add-cart-btn fx">分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn fx" @click="share">分享</button>
 				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即购买</button>
 			</view>
 		</view>
