@@ -62,9 +62,9 @@
 				"navigationBarTitleText": "修改资料"
 			}
 		}, {
-			"path": "pages/cart/cart",
+			"path": "pages/collect/collect",
 			"style": {
-				"navigationBarTitleText": "购物车"
+				"navigationBarTitleText": "收藏"
 			}
 		}, {
 			"path": "pages/public/login",
@@ -202,10 +202,10 @@
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/cart/cart",
+				"pagePath": "pages/collect/collect",
 				"iconPath": "static/tab-cart.png",
 				"selectedIconPath": "static/tab-cart-current.png",
-				"text": "购物车"
+				"text": "收藏"
 			},
 			{
 				"pagePath": "pages/user/user",

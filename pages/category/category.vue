@@ -8,15 +8,15 @@
 		<swiper :current="current" vertical class="right-aside" @change="change">
 			<swiper-item v-for="item in flist" :key="item.id" class="s-list">
 				<scroll-view scroll-y style="height: 100%;">
-				<view v-for="s in item.slist" :key="s.id">
-					<text class="s-item">{{s.name}}</text>
-					<view class="t-list">
-						<view v-for="t in s.tlist" :key="t.id" @click="navToList(s.id, t.id)" class="t-item">
-							<image :src="t.picture"></image>
-							<text>{{t.name}}</text>
+					<view v-for="s in item.slist" :key="s.id">
+						<text class="s-item">{{s.name}}</text>
+						<view class="t-list">
+							<view v-for="t in s.tlist" :key="t.id" @click="navToList(s.id, t.id)" class="t-item">
+								<image :src="t.picture"></image>
+								<text>{{t.name}}</text>
+							</view>
 						</view>
 					</view>
-				</view>
 				</scroll-view>
 			</swiper-item>
 			
@@ -131,7 +131,7 @@
 		padding-top: 18upx;
 		font-size: 28upx;
 		color: $font-color-dark;
-	}
+	} 
 	.t-list{
 		display: flex;
 		flex-wrap: wrap;
