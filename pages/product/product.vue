@@ -42,7 +42,7 @@
         </view>
 		
 		<!-- 评价 -->
-		<view class="eva-section">
+		<!-- <view class="eva-section">
 			<view class="e-header">
 				<text class="tit">评价</text>
 				<text>(1.5w+)</text>
@@ -56,7 +56,7 @@
 					
 				</view>
 			</view>
-		</view>
+		</view> -->
         <!-- 商店信息-->
 		<view class="shop">
             <view class="img">
