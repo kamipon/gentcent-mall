@@ -15,105 +15,141 @@
 		</view>
 		
 		<view class="introduce-section">
-			<text class="title">恒源祥2019春季长袖白色t恤 新款春装</text>
 			<view class="price-box">
-				<text class="price-tip">¥</text>
+				<text class=""></text>
+				<text class="price-tip">券后价 ¥ </text>
 				<text class="price">341.6</text>
-				<text class="m-price">¥488</text>
-				<text class="coupon-tip">7折</text>
+                <view class="rewards">预估积分:+9909</view>
 			</view>
+            <view class="m-price">
+				<text>原价</text> <text class="num">¥488</text>
+            </view>
+			<text class="title">恒源祥2019春季长袖白色t恤 新款春装</text>
 			<view class="bot-row">
-				<text>销量: 108</text>
-				<text>库存: 4690</text>
-				<text>浏览量: 768</text>
+				<text>X包邮</text>
+				<text class="sales">已售 <text class="num red">909万</text> 件</text>
 			</view>
 		</view>
-		
-		<!--  分享 -->
-		<view class="share-section" @click="share">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				 返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-			
-		</view>
-		
-		<view class="c-list">
-			<view class="c-row b-b" @click="toggleSpec">
-				<text class="tit">购买类型</text>
-				<view class="con">
-					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
-						{{sItem.name}}
-					</text>
-				</view>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
-				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
-				</view>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
-				</view>
-			</view>
-		</view>
+        <view class="coupon">
+            <view class="ticket">
+                <view class="ex">
+                    <view class="text"><text class="num">26</text>元优惠券</view>
+                    <view class="date">使用期限: 2019.01.02 - 2020.09.21</view>
+                </view>
+                <view class="button">立即领取</view>
+            </view>
+            <view class="description">【捡漏】欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉</view>
+        </view>
 		
 		<!-- 评价 -->
 		<view class="eva-section">
 			<view class="e-header">
 				<text class="tit">评价</text>
-				<text>(86)</text>
-				<text class="tip">好评率 100%</text>
-				<text class="yticon icon-you"></text>
+				<text>(1.5w+)</text>
+				<text class="tip">查看全部
+				<text class="yticon icon-you"></text></text>
 			</view> 
 			<view class="eva-box">
-				<image class="portrait" src="http://img3.imgtn.bdimg.com/it/u=1150341365,1327279810&fm=26&gp=0.jpg" mode="aspectFill"></image>
 				<view class="right">
 					<text class="name">Leo yo</text>
 					<text class="con">商品收到了，79元两件，质量不错，试了一下有点瘦，但是加个外罩很漂亮，我很喜欢</text>
-					<view class="bot">
-						<text class="attr">购买类型：XL 红色</text>
-						<text class="time">2019-04-01 19:21</text>
-					</view>
+					
 				</view>
 			</view>
 		</view>
-		
+        <!-- 商店信息-->
+		<view class="shop">
+            <view class="img">
+                <img src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
+            </view>
+            <view class="shop-tet">
+                <view class="t1" >
+                    <text class="name">北极绒专门店</text>
+                    <text class="go">进店逛逛</text>
+                    <text class="all" @click="navToShop(1)">全部商品</text>
+                </view>
+                <view class="zs">在售优惠商品<text class="num">2</text>件</view>
+            </view>
+        </view>
+        <view class="shop-score">
+            
+            <view class="score"><text>宝贝描述:</text><text class="num">4.9</text><text class="icon">高</text></view>
+            <view class="score">卖家服务:<text class="num">4.9</text><text class="icon">高</text></view>
+            <view class="score">物流服务:<text class="num">4.9</text><text class="icon">高</text></view>
+        </view>
+        <!--相似推荐 -->
+        <view class="seckill-section m-t">
+        	<view class="s-header">
+                相似推荐
+        	</view>
+        	<scroll-view class="floor-list" scroll-x>
+        		<view class="scoll-wrapper">
+        			<view 
+        				v-for="(item, index) in tjGoodsList2" :key="index"
+        				class="floor-item"
+        				@click="navToDetailPage(item)"
+        			>
+        				<image :src="item.image" mode="aspectFill"></image>
+        				<text class="title clamp">{{item.title}}</text>
+                        <view class="ticket">
+                            <text class="tt">
+                            <view class="icon">券</view>
+                        	<text class="num">100元</text>
+                            </text>
+                        </view>
+        				<text class="quan">券后</text>
+        				<text class="price">￥{{item.price}}</text>
+        			</view>
+        		</view>
+        	</scroll-view>
+        </view>
+        
 		<view class="detail-desc">
 			<view class="d-header">
-				<text>图文详情</text>
+				<text>商品详情</text>
 			</view>
 			<rich-text :nodes="desc"></rich-text>
 		</view>
 		
+		<view class="detail-tj">
+			<view class="d-header">
+				<text>推荐商品</text>
+			</view>
+            <view class="goods-list">
+                <view
+                	v-for="(item, index) in tjGoodsList" :key="index"
+                	class="goods-item"
+                	@click="navToDetailPage(item)"
+                >
+                	<view class="image-wrapper">
+                		<image :src="item.image" mode="aspectFill"></image>
+                	</view>
+                	<view class="text">
+                        <text class="title clamp">{{item.title}}</text>
+                        <view class="price-box">
+                        	<price class="tex"><price class="price">{{item.price}}</price></price>
+                        </view>
+                        <view class="ticket">
+                            <text class="tt">
+                            <view class="icon">券</view>
+                        	<text class="num">100元</text>
+                            </text>
+                        </view>
+                        <view class="xl-pl">
+                        	<text>已售 {{item.sales}} | 评论{{item.sales}} </text>
+                        </view>
+                    </view>
+                </view>
+                
+            </view>
+		</view>
+		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/index/index" open-type="switchTab"
+             class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
-			</navigator>
-			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
-				<text class="yticon icon-gouwuche"></text>
-				<text>购物车</text>
 			</navigator>
 			<view class="p-b-btn" :class="{active: favorite}" @click="toFavorite">
 				<text class="yticon icon-shoucang"></text>
@@ -121,8 +157,8 @@
 			</view>
 			
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buy">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn">加入购物车</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn fx">分享</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即购买</button>
 			</view>
 		</view>
 		
@@ -187,6 +223,57 @@
 				specClass: 'none',
 				specSelected:[],
 				
+				tjGoodsList: [{
+				    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+				    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+				    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+				    price: 179,
+				    sales: 61,
+				    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"}],
+                    
+                tjGoodsList2: [{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
+                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
+                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
+                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
+                    price: 179,
+                    sales: 61,
+                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"}],
 				favorite: true,
 				shareList: [],
 				imgList: [
@@ -290,6 +377,12 @@
 			this.shareList = await this.$api.json('shareList');
 		},
 		methods:{
+            navToShop(shopid){
+				let id = shopid;
+            	uni.navigateTo({
+            		url: `/pages/product/shop?id=${id}`
+            	})
+            },
 			//规格弹窗开关
 			toggleSpec() {
 				if(this.specClass === 'show'){
@@ -345,6 +438,99 @@
 </script>
 
 <style lang='scss'>
+    .shop{
+        display: flex;
+        margin-top: 16upx;
+        background-color: #fff;
+        padding: 20upx 30upx;
+        .img{
+            width: 120upx;
+            img{
+                width: 120upx;
+                height: 120upx;
+                border-radius: 5upx;
+            }
+         }
+         .shop-tet{
+            width:630upx;
+            padding: 0px 10upx ;
+            font-size: 24upx;
+            align-items: center;
+            .t1{
+                display: flex;
+                align-items: center;
+                .name{
+                    line-height: 60upx;
+                    height: 60upx;
+                    font-weight: 600;
+                    flex: 3;
+                }
+                .go{
+                    border: 1upx solid rgb(255,37,75);
+                    color: rgb(255,37,75);
+                    line-height: 40upx;
+                    padding:  0 1upx;
+                    height: 40upx;
+                    margin: 0 10upx;
+                    font-size: 16upx;
+                    text-align: center;
+                    flex: 1;
+                    border-radius: 20upx;
+                }
+                .all{
+                    line-height: 40upx;
+                    padding:  0 1upx;
+                    height: 40upx;
+                    background-color:rgb(255,37,75) ;
+                    color: #fff;
+                    margin: 0 10upx;
+                    font-size: 16upx;
+                    text-align: center;
+                    flex: 1;
+                    border-radius: 20upx;
+                }
+            }
+            .zs{
+                color: rgb(169,169,169);
+                line-height: 60upx;
+                height: 60upx;
+                font-size: 16upx;
+                .num{
+                    color: red;
+                    padding: 0 5upx;
+                }
+            }
+        }
+    }
+    .shop-score{
+        display: flex;
+        background-color: #fff;
+        margin-top: 2upx;
+        font-size: 24upx;
+        line-height: 24upx;
+        padding: 30upx 0upx ;
+        color: rgb(169,169,169);
+            
+        .score{
+            
+            text-align: center;
+            width: 200upx;
+            
+            align-items: center;
+            flex: 1;
+            text-align: center;
+            .num{
+                padding: 0 3upx;
+            }
+            .icon{
+                font-size: 18upx;
+                line-height: 24upx;
+                background-color: rgb(240,240,240);
+                padding: 3upx;
+                margin-left: 5upx;
+            }
+        }
+    }
 	page{
 		background: $page-color-base;
 		padding-bottom: 160upx;
@@ -376,14 +562,58 @@
 		}
 		
 	}
+    .coupon{
+        background-color: #fff;
+        padding: 0px 15upx 30upx 15upx;
+        .ticket{
+            padding: 20upx 10upx 20upx 50upx;
+            background: rgb(255,67,86);
+            border-radius: 10px;
+            color: #fff;
+            display:flex;
+            align-items:baseline;
+            font-size: 12px;
+            align-items: center;
+            text-align: left;
+            .ex{
+                width: 550upx;
+                .text{;
+                    height: 48upx;
+                    width: 100%;
+                    font-size: 28upx;
+                    .num{
+                        font-size: 42upx;
+                    }
+                }
+                .date{
+                    height: 48upx;
+                    width: 100%;
+                    font-size: 18upx;
+                    font-weight: 200;
+                    line-height: 20px;
+                    color:rgb(255,176,188)
+                }
+             }
+            .button{
+                width: 200upx;
+            }
+        }
+        .description{
+            margin: 0px 10upx;
+            font-size: 18upx;
+            color: rgb(137,137,137);
+            line-height: 44upx;
+        }
+    }
 	
 	/* 标题简介 */
 	.introduce-section{
 		background: #fff;
-		padding: 20upx 30upx;
+		padding: 20upx 30upx 5upx 30upx;
 		
 		.title{
 			font-size: 32upx;
+            font-weight: 600;
 			color: $font-color-dark;
 			height: 50upx;
 			line-height: 50upx;
@@ -395,14 +625,27 @@
 			padding: 10upx 0;
 			font-size: 26upx;
 			color:$uni-color-primary;
+            .rewards{
+                margin-left: auto;
+                background-color: rgb(255,238,231);
+                height: 25px;
+                line-height: 25px;
+                padding: 0px 3px;
+                color: rgb(252,28,83);
+                font-size: 12px;
+            }
 		}
 		.price{
 			font-size: $font-lg + 2upx;
 		}
 		.m-price{
-			margin:0 12upx;
+			margin:0 0upx;
+            font-size: 12px;
 			color: $font-color-light;
-			text-decoration: line-through;
+            .num{
+                padding-left: 5upx;
+                text-decoration: line-through;
+            }
 		}
 		.coupon-tip{
 			align-items: center;
@@ -415,7 +658,7 @@
 			transform: translateY(-4upx); 
 		}
 		.bot-row{
-			display:flex;
+			display:flex;    
 			align-items:center;
 			height: 50upx;
 			font-size: $font-sm;
@@ -423,6 +666,15 @@
 			text{
 				flex: 1;
 			}
+            .sales{
+                text-align: right;
+                .num{
+                    font-size: 10px;
+                    padding: 0 2px;
+                    color: #fa436a;
+                }
+            }
+            
 		}
 	}
 	/* 分享 */
@@ -548,9 +800,11 @@
 			.tip{
 				flex: 1;
 				text-align: right;
+                color: red;
 			}
 			.icon-you{
 				margin-left: 10upx;
+                color: red;
 			}
 		}
 	}
@@ -569,7 +823,11 @@
 			flex-direction: column;
 			font-size: $font-base;
 			color: $font-color-base;
-			padding-left: 26upx;
+			padding-left: 0upx;
+                
+            .name{
+                color: #909399;
+            }
 			.con{
 				font-size: $font-base;
 				color: $font-color-dark;
@@ -769,26 +1027,27 @@
 	/* 底部操作菜单 */
 	.page-bottom{
 		position:fixed;
-		left: 30upx;
-		bottom:30upx;
+		left: 0upx;
+		bottom: 0upx;
 		z-index: 95;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 690upx;
+		width: 750upx;
 		height: 100upx;
-		background: rgba(255,255,255,.9);
+		background: rgba(255,255,255,.99);
 		box-shadow: 0 0 20upx 0 rgba(0,0,0,.5);
-		border-radius: 16upx;
+		border-radius: 0upx;
 		
 		.p-b-btn{
+            flex: 2;
 			display:flex;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
 			font-size: $font-sm;
 			color: $font-color-base;
-			width: 96upx;
+			width: 200upx;
 			height: 80upx;
 			.yticon{
 				font-size: 40upx;
@@ -807,14 +1066,13 @@
 			}
 		}
 		.action-btn-group{
+            flex: 7;
+            margin: 0 10upx;
 			display: flex;
 			height: 76upx;
 			border-radius: 100px;
 			overflow: hidden;
-			box-shadow: 0 20upx 40upx -16upx #fa436a;
-			box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-			background: linear-gradient(to right, #ffac30,#fa436a,#F56C6C);
-			margin-left: 20upx;
+            background-color: rgb(255,238,224);
 			position:relative;
 			&:after{
 				content: '';
@@ -830,14 +1088,219 @@
 				display:flex;
 				align-items: center;
 				justify-content: center;
-				width: 180upx;
+				width: 240upx;
 				height: 100%;
 				font-size: $font-base ;
 				padding: 0;
 				border-radius: 0;
 				background: transparent;
 			}
+            .fx{
+                color: red;
+            }
+            .gm{
+                margin-right: 0px;
+                background-color: red;
+                color: #fff;
+            }
 		}
 	}
-	
+        
+    .detail-tj{
+        margin-top: 20upx;
+        .d-header{
+            background-color: #fff;
+        	display: flex;
+        	justify-content: center;
+        	align-items: center;
+        	height: 80upx;
+        	font-size: $font-base + 2upx;
+        	color: $font-color-dark;
+        	position: relative;
+        		
+        	text{
+        		padding: 0 20upx;
+        		background: #fff;
+        		position: relative;
+        		z-index: 1;
+        	}
+        	&:after{
+        		position: absolute;
+        		left: 50%;
+        		top: 50%;
+        		transform: translateX(-50%);
+        		width: 300upx;
+        		height: 0;
+        		content: '';
+        		border-bottom: 1px solid #ccc; 
+        	}
+        }
+    }
+	.goods-list{
+		display:flex;
+		flex-wrap:wrap;
+        padding-top: 10upx;
+		.text{
+            margin: 0 10upx;
+        }
+		.goods-item{
+            background: #fff;
+			display:flex;
+			flex-direction: column;
+			width: 47%;
+            margin:0  2% 15upx 2%;
+            border-radius:20upx ;
+			padding-bottom: 15upx;
+			 &:nth-child(2n+1){
+				margin-right: 0%;
+			}
+		}
+		.image-wrapper{
+			width: 100%;
+			height: 330upx;
+			border-radius: 3px;
+			overflow: hidden;
+			image{
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+			}
+		}
+		.title{
+			font-size: 26upx;
+			color: $font-color-dark;
+			line-height: 70upx;
+		}
+		.price-box{
+			display: flex;
+			padding-right: 10upx;
+			font-size: 24upx;
+            line-height: 60upx;
+			color: $font-color-light;
+            .tex{
+                &:before{
+                	content: '券后';
+                	font-size: 22upx;
+                }
+                font-size: 20upx;
+            }
+		}
+        .ticket{
+            margin-bottom: 10upx;
+            font-size: 22upx;
+            height: 24upx;
+            line-height: 22upx;
+            color: #fff;
+            display: flex;
+            width: max-content;
+            border-radius: 2upx;
+                
+            .tt{
+                background-color: rgb(255,105,96);
+                
+            }
+            .icon{
+                float: left;
+                height: 20upx;
+                font-size: 14upx;
+                background-color: #fff;
+                color: rgb(255,105,96);;
+                margin: 2upx 2upx;
+                border-radius: 1upx;
+                width: 20upx;
+                padding: 0 3upx;
+            }
+            .num{
+                line-height: 24upx;
+                height: 24upx;
+                font-size: 18upx;
+                padding: 0upx 2upx;
+                border-radius: 1upx;
+            }
+        }
+        .xl-pl{
+            font-size: 18upx;
+			color: $font-color-light;
+        }
+		.price{
+			font-size: $font-lg;
+			color: $uni-color-primary;
+			line-height: 1;
+			font-size: 32upx;
+			text-align: 600;
+            &:before{
+				content: '￥';
+				font-size: 26upx;
+			}
+		}
+	}
+    /* 秒杀专区 */
+    .seckill-section{
+    	padding: 4upx 30upx 24upx;
+    	background: #fff;
+        margin-top: 15upx;
+    	.s-header{
+            font-size: 28upx;
+            margin: 15upx 0;
+            color: rgb(84,84,84);
+        }
+        .ticket{
+            font-size: 22upx;
+            height: 24upx;
+            line-height: 22upx;
+            color: #fff;
+            display: flex;
+            width: max-content;
+                
+            .tt{
+                background-color: rgb(255,105,96);
+                border-radius: 4upx;  
+            }
+            .icon{
+                float: left;
+                height: 20upx;
+                font-size: 14upx;
+                background-color: #fff;
+                color: rgb(255,105,96);;
+                margin: 2upx 2upx;
+                border-radius: 4upx;
+                width: 20upx;
+                padding: 0 3upx;
+            }
+            .num{
+                line-height: 24upx;
+                height: 24upx;
+                font-size: 18upx;
+                padding: 0upx 2upx;
+                border-radius: 1upx;
+            }
+        }
+    	.floor-list{
+    		white-space: nowrap;
+    	}
+    	.scoll-wrapper{
+    		display:flex;
+    		align-items: flex-start;
+    	}
+    	.floor-item{
+    		width: 180upx;
+    		margin-right: 20upx;
+    		font-size: $font-sm+2upx;
+    		color: $font-color-dark;
+    		line-height: 1.8;
+    		image{
+    			width: 180upx;
+    			height: 180upx;
+    			border-radius: 6upx;
+    		}
+            .quan{
+                font-size: 20upx;
+                color: rgb(156,156,156);
+             }
+    		.price{
+    			color: $uni-color-primary;
+    		}
+    	}
+    }
+    
 </style>
