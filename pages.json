@@ -176,6 +176,14 @@
 				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "商品列表"
 			}
+        },{
+            "path" : "pages/product/shop",
+            "style" : {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "商家店铺",
+                "navigationBarBackgroundColor": "#FF325C",
+                "navigationBarTextStyle":"#fff"
+			}
         }
     ],
 	"globalStyle": {
