@@ -177,6 +177,12 @@
 				"navigationBarTitleText": "商品列表"
 			}
         },{
+            "path" : "pages/product/list2",
+            "style" : {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "商品列表2"
+			}
+        },{
             "path" : "pages/product/shop",
             "style" : {
 				"enablePullDownRefresh": true,
