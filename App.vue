@@ -395,6 +395,14 @@
 		white-space: nowrap;
 		display: block;
 	}
+	
+	.clamp2 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display:-webkit-box;
+		-webkit-box-orient:vertical;
+		-webkit-line-clamp:2;
+	}
 
 	.common-hover {
 		background: #f5f5f5;

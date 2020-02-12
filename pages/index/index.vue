@@ -71,7 +71,7 @@
 						@click="navToDetailPage(item)"
 					>
 						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
+						<text class="title clamp2">{{item.title}}</text>
 						<text class="price">￥{{item.price}}</text>
 					</view>
 				</view>
@@ -99,7 +99,7 @@
 						@click="navToDetailPage(item)"
 					>
 						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
+						<text class="title clamp2">{{item.title}}</text>
 						<text class="price">￥{{item.price}}</text>
 					</view>
 					<view class="more">
@@ -121,7 +121,7 @@
 						@click="navToDetailPage(item)"
 					>
 						<image :src="item.image3" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
+						<text class="title clamp2">{{item.title}}</text>
 						<text class="price">￥{{item.price}}</text>
 					</view>
 					<view class="more">
@@ -143,7 +143,7 @@
 						@click="navToDetailPage(item)"
 					>
 						<image :src="item.image2" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
+						<text class="title clamp2">{{item.title}}</text>
 						<text class="price">￥{{item.price}}</text>
 					</view>
 					<view class="more">
@@ -173,8 +173,10 @@
 				<view class="image-wrapper">
 					<image :src="item.image" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.title}}</text>
-				<text class="price">￥{{item.price}}</text>
+				<text class="title clamp2">{{item.title}}</text>
+				<text class="price">￥{{item.price}} <text class="discount-price">￥{{item.price}}</text></text>
+				<text class="sales-volume">已售<text class="num">1507</text></text>
+				<view class="coupon">5元券</view>
 			</view>
 		</view>
 		
@@ -578,15 +580,17 @@
 	.guess-section{
 		display:flex;
 		flex-wrap:wrap;
-		padding: 0 30upx;
-		background: #fff;
+		padding: 0 20upx;
+		background: $backg-color-grey;
 		.guess-item{
+			margin-top: 16upx;
+			background: #FFF;
 			display:flex;
 			flex-direction: column;
-			width: 48%;
-			padding-bottom: 40upx;
+			width: 49%;
+			padding-bottom: 20upx;
 			&:nth-child(2n+1){
-				margin-right: 4%;
+				margin-right: 2%;
 			}
 		}
 		.image-wrapper{
@@ -601,14 +605,46 @@
 			}
 		}
 		.title{
-			font-size: $font-lg;
+			font-size: 28upx;
 			color: $font-color-dark;
-			line-height: 80upx;
+			line-height: 40upx;
+			width: 100%;
+			padding: 18upx 18upx 20upx 18upx;
+			min-height: 112upx;
 		}
 		.price{
-			font-size: $font-lg;
-			color: $uni-color-primary;
+			font-size: 36upx;
+			color: $font-color-red;
 			line-height: 1;
+			font-weight: 600;
+			margin-left: 16upx;
+			.discount-price{
+				font-size: 24upx;
+				color: $font-color-grey;
+				line-height: 1;
+				margin-left: 10upx;
+				font-weight: 400;
+				text-decoration:line-through;
+			}
+		}
+		.sales-volume{
+			font-size: 24upx;
+			margin-top: 8upx;
+			margin-left: 18upx;
+			color: $font-color-grey;
+			.num{
+				margin-left: 8upx;
+			}
+		}
+		.coupon{
+			color: #F5F5F5;
+			background-color: $font-color-red;
+			font-size: 22upx;
+			display: inline-table;
+			margin-top: 24upx;
+			margin-left: 18upx;
+			padding: 2upx 4upx;
+			border-radius: 4upx;
 		}
 	}
 	
