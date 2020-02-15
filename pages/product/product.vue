@@ -90,6 +90,8 @@
         				v-for="(item, index) in tjGoodsList2" :key="index"
         				class="floor-item"
         				@click="navToDetailPage(item.goods_id)"
+                        
+                        v-show="item.goods_id!=goodsDeta.goods_id"
         			>
         				<image :src="item.goods_thumbnail_url" mode="aspectFill"></image>
         				<text class="title clamp">{{item.goods_name}}</text>
