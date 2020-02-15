@@ -2,68 +2,52 @@
 	<view class="content">
 		<view class="shop">
 		    <view class="img">
-		        <img src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
+		        <img :src="shop.img_url"></image>
 		    </view>
 		    <view class="shop-tet">
 		        <view class="t1" >
-		            <text class="name">北极绒专门店</text>
+		            <text class="name">{{shop.mall_name}}</text>
 		        </view>
 		        <view class="zs">天猫logo</view>
 		    </view>
 		</view>
 		<view class="shop-score">
 		    
-		    <view class="score"><text>宝贝描述:</text><text class="num">4.9</text><text class="icon">高</text></view>
-		    <view class="score">卖家服务:<text class="num">4.9</text><text class="icon">高</text></view>
-		    <view class="score">物流服务:<text class="num">4.9</text><text class="icon">高</text></view>
+            <view class="score"><text>宝贝描述:</text><text class="num"></text><text class="icon">{{shop.desc_txt}}</text></view>
+		    <view class="score">卖家服务:<text class="num"></text><text class="icon">{{shop.serv_txt}}</text></view>
+		    <view class="score">物流服务:<text class="num"></text><text class="icon">{{shop.lgst_txt}}</text></view>
 		</view>
         <view class="goods-list">
             
             <view 
             	v-for="(item, index) in goodsList" :key="index"
             	class="goods-item"
-            	@click="navToDetailPage(item)"
+            	@click="navToDetailPage(item.goods_id)"
             >
             	<view class="image-wrapper">
-            		<img :src="item.image" mode="aspectFill"></img>
+            		<img :src="item.goods_thumbnail_url" mode="aspectFill"></img>
             	</view>
                 <view class="date">
                     
                     <view class="title ">
-                        <text class="text">{{item.title}}{{item.title}}{{item.title}}</text>
+                        <text class="text">{{item.goods_name}}</text>
                     </view>
                     <view class="price-box t1">
-                    	<text>原价:￥69</text>
-                    	<text>已售<text class="num">{{item.sales}}</text>件</text>
+                    	<text>原价:￥{{item.min_normal_price| price}}</text>
+                    	<text>已售<text class="num">{{item.sales_tip}}</text>件</text>
                     </view>
                     <view class="price-box t2">
-                    	<text class="price">券后 ￥<text class="num">{{item.price}}</text></text>
+                    	<text class="price">券后 ￥<text class="num">{{item.min_normal_price -item.coupon_discount | price }}</text></text>
                     	<text class="ticket">
                             <view class="quan left"></view>
                             <view class="quan right"></view>
-                            20元券</text>
+                            {{item.coupon_discount | price}}元券</text>
                     </view>
                 </view>
             </view>
 		</view>
 		<uni-load-more :status="loadingType"></uni-load-more>
 		
-		<view class="cate-mask" :class="cateMaskState===0 ? 'none' : cateMaskState===1 ? 'show' : ''" @click="toggleCateMask">
-			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-				<scroll-view scroll-y class="cate-list">
-					<view v-for="item in cateList" :key="item.id">
-						<view class="cate-item b-b two">{{item.name}}</view>
-						<view 
-							v-for="tItem in item.child" :key="tItem.id" 
-							class="cate-item b-b" 
-							:class="{active: tItem.id==cateId}"
-							@click="changeCate(tItem)">
-							{{tItem.name}}
-						</view>
-					</view>
-				</scroll-view>
-			</view>
-		</view>
 		
 	</view>
 </template>
@@ -76,15 +60,12 @@
 		},
 		data() {
 			return {
-				cateMaskState: 0, //分类面板展开状态
 				headerPosition:"fixed",
 				headerTop:"0px",
 				loadingType: 'more', //加载更多状态
-				filterIndex: 0, 
-				cateId: 0, //已选三级分类id
-				priceOrder: 0, //1 价格从低到高 2价格从高到低
-				cateList: [],
-				goodsList: []
+				shopId: "", //已选三级分类id
+				goodsList: [],
+                shop : {},
 			};
 		},
 		
@@ -92,7 +73,7 @@
 			// #ifdef H5
 			this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight+'px';
 			// #endif
-			this.cateId = options.tid;
+			this.shopId = options.id;
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
@@ -113,51 +94,55 @@
 			this.loadData();
 		},
 		methods: {
+            getShopDeta(){
+                uni.request({
+                    url: this.websiteUrl+'/app_shop/detail', 
+                    data: {
+                        id: this.shopId
+                    },
+                    success: (res) => {
+                        this.shop=res.data.merchant_list_response.mall_search_info_vo_list[0];
+                        
+                        this.goodsList= this.shop.goods_detail_vo_list;
+                        console.log( this.goodsList)
+                        this.loadingType='nomore';
+                    }
+                });
+            },
+            navToDetailPage(goodsId){
+                uni.navigateTo({
+                    url: `/pages/product/product?id=${goodsId}`
+                })
+            },
 			//加载分类
 			async loadCateList(fid, sid){
-				let list = await this.$api.json('cateList');
-				let cateList = list.filter(item=>item.pid == fid);
-				
-				cateList.forEach(item=>{
-					let tempList = list.filter(val=>val.pid == item.id);
-					item.child = tempList;
-				})
-				this.cateList = cateList;
 			},
 			//加载商品 ，带下拉刷新和上滑加载
-			async loadData(type='add', loading) {
-				//没有更多直接返回
+			loadData(type='add', loading) {
+				console.log("123")
+				console.log(this.loadingType)
+                //没有更多直接返回
 				if(type === 'add'){
 					if(this.loadingType === 'nomore'){
 						return;
 					}
 					this.loadingType = 'loading';
+                    this.getShopDeta()
 				}else{
-					this.loadingType = 'more'
+					location.reload();
+                    return;
 				}
 				
-				let goodsList = await this.$api.json('goodsList');
+				let goodsList =  this.$api.json('goodsList');
 				if(type === 'refresh'){
 					this.goodsList = [];
 				}
-				//筛选，测试数据直接前端筛选了
-				if(this.filterIndex === 1){
-					goodsList.sort((a,b)=>b.sales - a.sales)
-				}
-				if(this.filterIndex === 2){
-					goodsList.sort((a,b)=>{
-						if(this.priceOrder == 1){
-							return a.price - b.price;
-						}
-						return b.price - a.price;
-					})
-				}
+				goodsList.sort((a,b)=>b.sales - a.sales)
 				
-				this.goodsList = this.goodsList.concat(goodsList);
 				
 				//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-				this.loadingType  = this.goodsList.length > 20 ? 'nomore' : 'more';
-				if(type === 'refresh'){
+				this.loadingType= this.goodsList.length > 20 ? 'nomore' : 'more';
+                if(type === 'refresh'){
 					if(loading == 1){
 						uni.hideLoading()
 					}else{
@@ -165,58 +150,43 @@
 					}
 				}
 			},
-			//筛选点击
-			tabClick(index){
-				if(this.filterIndex === index && index !== 2){
-					return;
-				}
-				this.filterIndex = index;
-				if(index === 2){
-					this.priceOrder = this.priceOrder === 1 ? 2: 1;
-				}else{
-					this.priceOrder = 0;
-				}
-				uni.pageScrollTo({
-					duration: 300,
-					scrollTop: 0
-				})
-				this.loadData('refresh', 1);
-				uni.showLoading({
-					title: '正在加载'
-				})
-			},
-			//显示分类面板
-			toggleCateMask(type){
-				let timer = type === 'show' ? 10 : 300;
-				let	state = type === 'show' ? 1 : 0;
-				this.cateMaskState = 2;
-				setTimeout(()=>{
-					this.cateMaskState = state;
-				}, timer)
-			},
-			//分类点击
-			changeCate(item){
-				this.cateId = item.id;
-				this.toggleCateMask();
-				uni.pageScrollTo({
-					duration: 300,
-					scrollTop: 0
-				})
-				this.loadData('refresh', 1);
-				uni.showLoading({
-					title: '正在加载'
-				})
-			},
-			//详情
-			navToDetailPage(item){
-				//测试数据没有写id，用title代替
-				let id = item.title;
-				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
-				})
-			},
+            getOtp(){
+                uni.request({
+                    url: this.websiteUrl+'/app_goods/opt', 
+                    data: {
+                        ids: this.opt_ids
+                    },
+                    success: (res) => {
+                        console.log("33333")
+                        console.log(res.data.goods_search_response.goods_list);
+                        this.tjGoodsList2 = res.data.goods_search_response.goods_list;
+                    }
+                });
+            },
 			stopPrevent(){}
 		},
+        filters:{
+            price(val){
+                return val/100
+            },
+            dateFormat(val){
+                function timeAdd0(str) {
+                    if (str < 10) {
+                        str = '0' + str;
+                    }
+                    return str
+                }
+                var time = new Date(val*1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                return y + '-' + timeAdd0(m) + '-' + timeAdd0(d) ;
+        
+            }            
+        }
 	}
 </script>
 
@@ -227,36 +197,7 @@
 	}
 	.content{
 	}
-	/* 分类 */
-	.cate-mask{
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		bottom: 0;
-		width: 100%;
-		background: rgba(0,0,0,0);
-		z-index: 95;
-		transition: .3s;
-		
-		.cate-content{
-			width: 630upx;
-			height: 100%;
-			background: #fff;
-			float:right;
-			transform: translateX(100%);
-			transition: .3s;
-		}
-		&.none{
-			display: none;
-		}
-		&.show{
-			background: rgba(0,0,0,.4);
-			
-			.cate-content{
-				transform: translateX(0);
-			}
-		}
-	}
+	
 	.cate-list{
 		display: flex;
 		flex-direction: column;

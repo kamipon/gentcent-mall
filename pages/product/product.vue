@@ -18,27 +18,29 @@
 			<view class="price-box">
 				<text class=""></text>
 				<text class="price-tip">券后价 ¥ </text>
-				<text class="price">341.6</text>
+				<text class="price">{{goodsDeta.min_normal_price-goodsDeta.coupon_discount | price }}</text>
                 <view class="rewards">预估积分:+9909</view>
 			</view>
             <view class="m-price">
-				<text>原价</text> <text class="num">¥488</text>
+				<text>原价</text> <text class="num">¥{{goodsDeta.min_normal_price|price}}</text>
             </view>
-			<text class="title">恒源祥2019春季长袖白色t恤 新款春装</text>
+			<text class="title">{{goodsDeta.goods_name}}</text>
 			<view class="bot-row">
 				<text>X包邮</text>
-				<text class="sales">已售 <text class="num red">909万</text> 件</text>
+				<text class="sales">已售 <text class="num red">{{goodsDeta.sales_tip}}</text> 件</text>
 			</view>
 		</view>
         <view class="coupon">
             <view class="ticket">
                 <view class="ex">
-                    <view class="text"><text class="num">26</text>元优惠券</view>
-                    <view class="date">使用期限: 2019.01.02 - 2020.09.21</view>
+                    <view class="text"><text class="num">{{(goodsDeta.coupon_discount)| price}}</text>元优惠券</view>
+                    <view class="date">
+                        使用期限: {{goodsDeta.coupon_start_time | dateFormat }} 
+                    - {{goodsDeta.coupon_end_time | dateFormat }}</view>
                 </view>
                 <view class="button">立即领取</view>
             </view>
-            <view class="description">【捡漏】欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉欧拉</view>
+            <view class="description"></view>
         </view>
 		
 		<!-- 评价 -->
@@ -60,22 +62,22 @@
         <!-- 商店信息-->
 		<view class="shop">
             <view class="img">
-                <img src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
+                <img :src="shop.img_url"></image>
             </view>
             <view class="shop-tet">
                 <view class="t1" >
-                    <text class="name">北极绒专门店</text>
+                    <text class="name">{{shop.mall_name}}</text>
                     <text class="go">进店逛逛</text>
-                    <text class="all" @click="navToShop(1)">全部商品</text>
+                    <text class="all" @click="navToShop(shop.mall_id)">全部商品</text>
                 </view>
-                <view class="zs">在售优惠商品<text class="num">2</text>件</view>
+                <view class="zs">在售优惠商品<text class="num">{{shop.goods_detail_vo_list.length}}</text>件</view>
             </view>
         </view>
         <view class="shop-score">
             
-            <view class="score"><text>宝贝描述:</text><text class="num">4.9</text><text class="icon">高</text></view>
-            <view class="score">卖家服务:<text class="num">4.9</text><text class="icon">高</text></view>
-            <view class="score">物流服务:<text class="num">4.9</text><text class="icon">高</text></view>
+            <view class="score"><text>宝贝描述:</text><text class="num"></text><text class="icon">{{goodsDeta.desc_txt}}</text></view>
+            <view class="score">卖家服务:<text class="num"></text><text class="icon">{{goodsDeta.serv_txt}}</text></view>
+            <view class="score">物流服务:<text class="num"></text><text class="icon">{{goodsDeta.lgst_txt}}</text></view>
         </view>
         <!--相似推荐 -->
         <view class="seckill-section m-t">
@@ -87,18 +89,18 @@
         			<view 
         				v-for="(item, index) in tjGoodsList2" :key="index"
         				class="floor-item"
-        				@click="navToDetailPage(item)"
+        				@click="navToDetailPage(item.goods_id)"
         			>
-        				<image :src="item.image" mode="aspectFill"></image>
-        				<text class="title clamp">{{item.title}}</text>
+        				<image :src="item.goods_thumbnail_url" mode="aspectFill"></image>
+        				<text class="title clamp">{{item.goods_name}}</text>
                         <view class="ticket">
                             <text class="tt">
                             <view class="icon">券</view>
-                        	<text class="num">100元</text>
+                        	<text class="num">{{item.coupon_discount| price}}元</text>
                             </text>
                         </view>
         				<text class="quan">券后</text>
-        				<text class="price">￥{{item.price}}</text>
+        				<text class="price">￥{{item.min_normal_price-item.coupon_discount | price}}</text>
         			</view>
         		</view>
         	</scroll-view>
@@ -108,10 +110,13 @@
 			<view class="d-header">
 				<text>商品详情</text>
 			</view>
-			<rich-text :nodes="desc"></rich-text>
+			<view>
+                {{goodsDeta.goods_desc}}
+            </view>
+            <!-- <rich-text :nodes="desc"></rich-text> -->
 		</view>
 		
-		<view class="detail-tj">
+		<view class="detail-tj" v-show="false">
 			<view class="d-header">
 				<text>推荐商品</text>
 			</view>
@@ -162,47 +167,6 @@
 			</view>
 		</view>
 		
-		
-		<!-- 规格-模态层弹窗 -->
-		<view 
-			class="popup spec" 
-			:class="specClass"
-			@touchmove.stop.prevent="stopPrevent"
-			@click="toggleSpec"
-		>
-			<!-- 遮罩层 -->
-			<view class="mask"></view>
-			<view class="layer attr-content" @click.stop="stopPrevent">
-				<view class="a-t">
-					<image src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
-					<view class="right">
-						<text class="price">¥328.00</text>
-						<text class="stock">库存：188件</text>
-						<view class="selected">
-							已选：
-							<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">
-								{{sItem.name}}
-							</text>
-						</view>
-					</view>
-				</view>
-				<view v-for="(item,index) in specList" :key="index" class="attr-list">
-					<text>{{item.name}}</text>
-					<view class="item-list">
-						<text 
-							v-for="(childItem, childIndex) in specChildList" 
-							v-if="childItem.pid === item.id"
-							:key="childIndex" class="tit"
-							:class="{selected: childItem.selected}"
-							@click="selectSpec(childIndex, childItem.pid)"
-						>
-							{{childItem.name}}
-						</text>
-					</view>
-				</view>
-				<button class="btn" @click="toggleSpec">完成</button>
-			</view>
-		</view>
 		<!-- 分享 -->
 		<share 
 			ref="share" 
@@ -231,62 +195,9 @@
 				    sales: 61,
 				    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"}],
                     
-                tjGoodsList2: [{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"},{
-                    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
-                    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
-                    image3: "http://img001.hc360.cn/y5/M00/1B/45/wKhQUVYFE0uEZ7zVAAAAAMj3H1w418.jpg",
-                    price: 179,
-                    sales: 61,
-                    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"}],
+                tjGoodsList2: [],
 				favorite: true,
 				shareList: [],
-				imgList: [
-					{
-						src: 'https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg'
-					},
-					{
-						src: 'https://gd3.alicdn.com/imgextra/i3/TB1RPFPPFXXXXcNXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
-					},
-					{
-						src: 'https://gd2.alicdn.com/imgextra/i2/38832490/O1CN01IYq7gu1UGShvbEFnd_!!38832490.jpg_400x400.jpg'
-					}
-				],
 				desc: `
 					<div style="width:100%">
 						<img style="width:100%;display:block;" src="https://gd3.alicdn.com/imgextra/i4/479184430/O1CN01nCpuLc1iaz4bcSN17_!!479184430.jpg_400x400.jpg" />
@@ -296,128 +207,71 @@
 						<img style="width:100%;display:block;" src="https://gd1.alicdn.com/imgextra/i1/479184430/O1CN01Tnm1rU1iaz4aVKcwP_!!479184430.jpg_400x400.jpg" />
 					</div>
 				`,
-				specList: [
-					{
-						id: 1,
-						name: '尺寸',
-					},
-					{	
-						id: 2,
-						name: '颜色',
-					},
-				],
-				specChildList: [
-					{
-						id: 1,
-						pid: 1,
-						name: 'XS',
-					},
-					{
-						id: 2,
-						pid: 1,
-						name: 'S',
-					},
-					{
-						id: 3,
-						pid: 1,
-						name: 'M',
-					},
-					{
-						id: 4,
-						pid: 1,
-						name: 'L',
-					},
-					{
-						id: 5,
-						pid: 1,
-						name: 'XL',
-					},
-					{
-						id: 6,
-						pid: 1,
-						name: 'XXL',
-					},
-					{
-						id: 7,
-						pid: 2,
-						name: '白色',
-					},
-					{
-						id: 8,
-						pid: 2,
-						name: '珊瑚粉',
-					},
-					{
-						id: 9,
-						pid: 2,
-						name: '草木绿',
-					},
-				]
+                goodsDeta:{},
+                shopId : "",
+                shop : {},
+                opt_ids:"",
 			};
 		},
 		async onLoad(options){
-			
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			if(id){
-				this.$api.msg(`点击了${id}`);
+				//this.$api.msg(`点击了${id}`);
 			}
-			
-			
-			//规格 默认选中第一条
-			this.specList.forEach(item=>{
-				for(let cItem of this.specChildList){
-					if(cItem.pid === item.id){
-						this.$set(cItem, 'selected', true);
-						this.specSelected.push(cItem);
-						break; //forEach不能使用break
-					}
-				}
-			})
+            console.log(111)
+            uni.request({
+                url: this.websiteUrl+`/app_goods/detail`, 
+                data: {
+                    id: id
+                },
+                success: (res) => {
+                    this.goodsDeta=res.data.goods_detail_response.goods_details[0];
+                    this.shopId = res.data.goods_detail_response.goods_details[0].mall_id;
+                    this.opt_ids = res.data.goods_detail_response.goods_details[0].opt_ids;
+                    this.getShopDeta()
+                    this.getOtp()
+                }
+            });
+            //获取数据
 			this.shareList = await this.$api.json('shareList');
 		},
 		methods:{
+            getShopDeta(){
+                uni.request({
+                    url: this.websiteUrl+'/app_shop/detail', 
+                    data: {
+                        id: this.shopId
+                    },
+                    success: (res) => {
+                        this.shop=res.data.merchant_list_response.mall_search_info_vo_list[0];
+                    }
+                });
+            },
+            getOtp(){
+                uni.request({
+                    url: this.websiteUrl+'/app_goods/opt', 
+                    data: {
+                        ids: this.opt_ids
+                    },
+                    success: (res) => {
+                        console.log("33333")
+                        console.log(res.data.goods_search_response.goods_list);
+                        this.tjGoodsList2 = res.data.goods_search_response.goods_list;
+                    }
+                });
+            },
             navToShop(shopid){
 				let id = shopid;
             	uni.navigateTo({
             		url: `/pages/product/shop?id=${id}`
             	})
             },
-			//规格弹窗开关
-			toggleSpec() {
-				if(this.specClass === 'show'){
-					this.specClass = 'hide';
-					setTimeout(() => {
-						this.specClass = 'none';
-					}, 250);
-				}else if(this.specClass === 'none'){
-					this.specClass = 'show';
-				}
-			},
-			//选择规格
-			selectSpec(index, pid){
-				let list = this.specChildList;
-				list.forEach(item=>{
-					if(item.pid === pid){
-						this.$set(item, 'selected', false);
-					}
-				})
-
-				this.$set(list[index], 'selected', true);
-				//存储已选择
-				/**
-				 * 修复选择规格存储错误
-				 * 将这几行代码替换即可
-				 * 选择的规格存放在specSelected中
-				 */
-				this.specSelected = []; 
-				list.forEach(item=>{ 
-					if(item.selected === true){ 
-						this.specSelected.push(item); 
-					} 
-				})
-				
-			},
+            navToDetailPage(goodsId){
+                uni.navigateTo({
+                    url: `/pages/product/product?id=${goodsId}`
+                })
+            },
 			//分享
 			share(){
 				this.$refs.share.toggleMask();	
@@ -433,7 +287,41 @@
 			},
 			stopPrevent(){}
 		},
+        computed:{
+            imgList : function(){
+               let list =[];
+               if(this.goodsDeta.goods_image_url){
+                   //console.log(this.goodsDeta.goods_image_url)
+                   //list.push({src:this.goodsDeta.goods_image_url})
+                    for (let s of this.goodsDeta.goods_gallery_urls) {
+                        list.push({src:s})
+                    }
+               }
+               return list
+            }
+        },
+        filters:{
+            price(val){
+                return val/100
+            },
+            dateFormat(val){
+                function timeAdd0(str) {
+                    if (str < 10) {
+                        str = '0' + str;
+                    }
+                    return str
+                }
+                var time = new Date(val*1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                return y + '-' + timeAdd0(m) + '-' + timeAdd0(d) ;
 
+            }            
+        }
 	}
 </script>
 
@@ -845,6 +733,8 @@
 	.detail-desc{
 		background: #fff;
 		margin-top: 16upx;
+        padding-bottom: 20upx;
+        font-size: 24upx;
 		.d-header{
 			display: flex;
 			justify-content: center;
