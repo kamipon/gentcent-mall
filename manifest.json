@@ -5,9 +5,12 @@
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
+    "h5" : {
+        "title" : "pdd"
+    },
     "app-plus" : {
         /* 5+App特有相关 */
-		"usingComponents":true,
+        "usingComponents" : true,
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
             "waiting" : true,
@@ -55,10 +58,12 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-		"usingComponents":true,
+        "usingComponents" : true,
         "appid" : "",
         "setting" : {
             "urlCheck" : true
         }
     }
 }
+/* 5+App特有相关 */
+

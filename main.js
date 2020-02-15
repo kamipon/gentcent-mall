@@ -45,7 +45,7 @@ Vue.config.productionTip = false
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
 Vue.prototype.$api = {msg, json, prePage};
-
+Vue.prototype.websiteUrl = 'http://localhost'; 
 App.mpType = 'app'
 
 const app = new Vue({
