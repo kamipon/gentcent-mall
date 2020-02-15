@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import store from './store'
 import App from './App'
-
+import api from './plugins/api/api.js'
 import Json from './Json' //测试用数据
 /**
  *  因工具函数属于公司资产, 所以直接在Vue实例挂载几个常用的函数
@@ -45,6 +45,8 @@ Vue.config.productionTip = false
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
 Vue.prototype.$api = {msg, json, prePage};
+Vue.prototype.$_get = api.$_get;
+Vue.prototype.$_post = api.$_post;
 
 App.mpType = 'app'
 

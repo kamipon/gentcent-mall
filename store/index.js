@@ -7,6 +7,7 @@ const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
 		userInfo: {},
+		webviewSrc: ""
 	},
 	mutations: {
 		login(state, provider) {
