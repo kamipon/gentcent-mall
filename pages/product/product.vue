@@ -60,7 +60,7 @@
 			</view>
 		</view> -->
         <!-- 商店信息-->
-		<view class="shop">
+		<view class="shop" v-if="shop">
             <view class="img">
                 <img :src="shop.img_url"></image>
             </view>
@@ -233,6 +233,7 @@
                     this.opt_ids = res.data.goods_detail_response.goods_details[0].opt_ids;
                     this.getShopDeta()
                     this.getOtp()
+                    console.log( this.shopId)
                 }
             });
             //获取数据
