@@ -18,11 +18,11 @@
 			<view class="price-box">
 				<text class=""></text>
 				<text class="price-tip">券后价 ¥ </text>
-				<text class="price">{{goodsDeta.min_normal_price-goodsDeta.coupon_discount | price }}</text>
+				<text class="price">{{goodsDeta.min_group_price-goodsDeta.coupon_discount | price }}</text>
                 <view class="rewards">预估积分:+9909</view>
 			</view>
             <view class="m-price">
-				<text>原价</text> <text class="num">¥{{goodsDeta.min_normal_price|price}}</text>
+				<text>原价</text> <text class="num">¥{{goodsDeta.min_group_price |price}}</text>
             </view>
 			<text class="title">{{goodsDeta.goods_name}}</text>
 			<view class="bot-row">
@@ -102,7 +102,7 @@
                             </text>
                         </view>
         				<text class="quan">券后</text>
-        				<text class="price">￥{{item.min_normal_price-item.coupon_discount | price}}</text>
+        				<text class="price">￥{{item.min_group_price - item.coupon_discount | price}}</text>
         			</view>
         		</view>
         	</scroll-view>
@@ -165,7 +165,7 @@
 			
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn fx" @click="share">分享</button>
-				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即购买</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即抢券</button>
 			</view>
 		</view>
 		
@@ -221,48 +221,41 @@
 			if(id){
 				//this.$api.msg(`点击了${id}`);
 			}
-            console.log(111)
-            uni.request({
-                url: this.websiteUrl+`/app_goods/detail`, 
-                data: {
-                    id: id
-                },
-                success: (res) => {
-                    this.goodsDeta=res.data.goods_detail_response.goods_details[0];
-                    this.shopId = res.data.goods_detail_response.goods_details[0].mall_id;
-                    this.opt_ids = res.data.goods_detail_response.goods_details[0].opt_ids;
-                    this.getShopDeta()
-                    this.getOtp()
-                    console.log( this.shopId)
-                }
-            });
+            this.$_get("app_goods/detail",{id: id}).then(res => {
+				this.goodsDeta=res.goods_detail_response.goods_details[0];
+				this.shopId = res.goods_detail_response.goods_details[0].mall_id;
+				this.opt_ids = res.goods_detail_response.goods_details[0].opt_ids;
+				this.getShopDeta()
+				this.getOtp()
+				console.log( this.shopId)
+			});
+            // uni.request({
+            //     url: this.websiteUrl+`/app_goods/detail`, 
+            //     data: {
+            //         id: id
+            //     },
+            //     success: (res) => {
+            //        this.goodsDeta=res.data.goods_detail_response.goods_details[0];
+            //        this.shopId = res.data.goods_detail_response.goods_details[0].mall_id;
+            //        this.opt_ids = res.data.goods_detail_response.goods_details[0].opt_ids;
+            //        this.getShopDeta()
+            //        this.getOtp()
+            //        console.log( this.shopId)
+            //     }
+            // });
             //获取数据
 			this.shareList = await this.$api.json('shareList');
 		},
 		methods:{
             getShopDeta(){
-                uni.request({
-                    url: this.websiteUrl+'/app_shop/detail', 
-                    data: {
-                        id: this.shopId
-                    },
-                    success: (res) => {
-                        this.shop=res.data.merchant_list_response.mall_search_info_vo_list[0];
-                    }
-                });
+                this.$_get("app_shop/detail",{id: this.shopId}).then(res => {
+                        this.shop=res.merchant_list_response.mall_search_info_vo_list[0];
+                })
             },
             getOtp(){
-                uni.request({
-                    url: this.websiteUrl+'/app_goods/opt', 
-                    data: {
-                        ids: this.opt_ids
-                    },
-                    success: (res) => {
-                        console.log("33333")
-                        console.log(res.data.goods_search_response.goods_list);
-                        this.tjGoodsList2 = res.data.goods_search_response.goods_list;
-                    }
-                });
+                this.$_get("app_goods/opt",{ids: this.opt_ids}).then(res => {
+                    this.tjGoodsList2 = res.goods_search_response.goods_list;
+                })
             },
             navToShop(shopid){
 				let id = shopid;
@@ -284,9 +277,13 @@
 				this.favorite = !this.favorite;
 			},
 			buy(){
-				uni.navigateTo({
-					url: `/pages/order/createOrder`
-				})
+                this.$_get("app_goods/generate",{id: this.goodsDeta.goods_id}).then(res => {
+                    this.$store.state.webviewSrc = res.goods_promotion_url_generate_response.goods_promotion_url_list[0].mobile_short_url;
+                    uni.navigateTo({
+                        url: `/pages/webview/webview`
+
+                    })
+                })
 			},
 			stopPrevent(){}
 		},
@@ -294,8 +291,6 @@
             imgList : function(){
                let list =[];
                if(this.goodsDeta.goods_image_url){
-                   //console.log(this.goodsDeta.goods_image_url)
-                   //list.push({src:this.goodsDeta.goods_image_url})
                     for (let s of this.goodsDeta.goods_gallery_urls) {
                         list.push({src:s})
                     }

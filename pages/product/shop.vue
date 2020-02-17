@@ -33,12 +33,12 @@
                         <text class="text">{{item.goods_name}}</text>
                     </view>
                     <view class="price-box t1">
-                    	<text>原价:￥{{item.min_normal_price| price}}</text>
+                    	<text>原价:￥{{item.min_group_price| price}}</text>
                     	<text>已售<text class="num">{{item.sales_tip}}</text>件</text>
                     </view>
                     <view class="price-box t2">
-                    	<text class="price">券后 ￥<text class="num">{{item.min_normal_price -item.coupon_discount | price }}</text></text>
-                    	<text class="ticket">
+                    	<text class="price">券后 ￥<text class="num">{{item.min_group_price -item.coupon_discount | price }}</text></text>
+                    	<text class="ticket" v-show="item.coupon_discount>0">
                             <view class="quan left"></view>
                             <view class="quan right"></view>
                             {{item.coupon_discount | price}}元券</text>
@@ -95,18 +95,11 @@
 		},
 		methods: {
             getShopDeta(){
-                uni.request({
-                    url: this.websiteUrl+'/app_shop/detail', 
-                    data: {
-                        id: this.shopId
-                    },
-                    success: (res) => {
-                        this.shop=res.data.merchant_list_response.mall_search_info_vo_list[0];
-                        
-                        this.goodsList= this.shop.goods_detail_vo_list;
-                        console.log( this.goodsList)
-                        this.loadingType='nomore';
-                    }
+                
+                this.$_get("app_shop/detail",{id: this.shopId}).then(res => {
+                	this.shop=res.merchant_list_response.mall_search_info_vo_list[0];
+                	this.goodsList= this.shop.goods_detail_vo_list;
+                	this.loadingType='nomore';
                 });
             },
             navToDetailPage(goodsId){
@@ -119,8 +112,6 @@
 			},
 			//加载商品 ，带下拉刷新和上滑加载
 			loadData(type='add', loading) {
-				console.log("123")
-				console.log(this.loadingType)
                 //没有更多直接返回
 				if(type === 'add'){
 					if(this.loadingType === 'nomore'){
