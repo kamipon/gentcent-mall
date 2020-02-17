@@ -12,7 +12,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebview({ src: item.url})">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebview({ src: item.url })">
 					<image :src="item.src" />
 				</swiper-item>
 			</swiper>
@@ -25,20 +25,20 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="navToWebview({ src: urlList2[0]})">
-				<image src="/static/miaosha.png"></image>
+			<view class="cate-item" @click="navToWebview({ src: urlList2[0] })">
+				<image src="/static/miaosha.png" mode="aspectFill"></image>
 				<text>限时秒杀</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[1]})">
-				<image src="/static/chongzhi.png"></image>
+			<view class="cate-item" @click="navToWebview({ src: urlList2[1] })">
+				<image src="/static/chongzhi.png" mode="aspectFill"></image>
 				<text>充值中心</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[2]})">
-				<image src="/static/dianqi.png"></image>
+			<view class="cate-item" @click="navToWebview({ src: urlList2[2] })">
+				<image src="/static/dianqi.png" mode="aspectFill"></image>
 				<text>电器专场</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[3]})">
-				<image src="/static/butie.png"></image>
+			<view class="cate-item" @click="navToWebview({ src: urlList2[3] })">
+				<image src="/static/butie.png" mode="aspectFill"></image>
 				<text>百亿补贴</text>
 			</view>
 		</view>
@@ -46,7 +46,7 @@
 		<view class="ad-1"><image src="/static/temp/ad1.jpg" mode="scaleToFill"></image></view>
 
 		<!-- 秒杀楼层 -->
-		<!-- <view class="seckill-section m-t">
+		<view class="seckill-section m-t">
 			<view class="s-header">
 				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
 				<text class="tip">8点场</text>
@@ -64,10 +64,10 @@
 					</view>
 				</view>
 			</scroll-view>
-		</view> -->
+		</view>
 
 		<!-- 分类推荐楼层 -->
-		<!-- <view class="f-header m-t">
+		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">分类精选</text>
@@ -141,7 +141,7 @@
 				</view>
 			</scroll-view>
 		</view>
- -->
+
 		<!-- 今日推荐 -->
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
@@ -230,14 +230,15 @@ export default {
 		 */
 		loadData() {
 			let pageSize = 40;
-			this.$_get('app_index/goods/top', { pageIndex: this.pageIndex, pageSize: pageSize }).then(res => {
+			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize }).then(res => {
+				console.log(res);
 				this.pageIndex++;
-				if (Math.round(res.data.topGoodsListGetResponse.total / pageSize) <= this.pageIndex) {
+				if (Math.round(res.data.goodsSearchResponse.totalCount / pageSize) <= this.pageIndex) {
 					this.more = 'noMore';
 				} else {
 					this.more = 'more';
 				}
-				this.goodsList = this.goodsList.concat(res.data.topGoodsListGetResponse.list);
+				this.goodsList = this.goodsList.concat(res.data.goodsSearchResponse.goodsList);
 			});
 		},
 		//轮播图切换修改背景色
@@ -256,7 +257,8 @@ export default {
 		//详情页
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
-			let id = item.title;
+			let id = item.goodsId;
+			console.log(`/pages/product/product?id=${id}`);
 			uni.navigateTo({
 				url: `/pages/product/product?id=${id}`
 			});
@@ -424,14 +426,13 @@ page {
 		font-size: $font-sm + 2upx;
 		color: $font-color-dark;
 	}
-	/* 原图标颜色太深,不想改图了,所以加了透明度 */
 	image {
 		width: 88upx;
 		height: 88upx;
 		margin-bottom: 14upx;
 		border-radius: 50%;
-		opacity: 0.7;
-		box-shadow: 4upx 4upx 20upx rgba(250, 67, 106, 0.3);
+		box-shadow: 4upx 4upx 20upx rgba(121, 33, 52, 0.35);
+		background-color: #ff9a8b;
 	}
 }
 .ad-1 {

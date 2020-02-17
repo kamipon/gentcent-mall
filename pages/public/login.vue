@@ -26,7 +26,7 @@
 					<input 
 						type="mobile" 
 						value="" 
-						placeholder="8-18位不含特殊字符的数字、字母组合"
+						placeholder="请输入密码"
 						placeholder-class="input-empty"
 						maxlength="20"
 						password 
@@ -38,7 +38,7 @@
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="forget-section">
-				忘记密码?
+				验证码登录
 			</view>
 		</view>
 		<view class="register-section">
@@ -74,7 +74,9 @@
 				uni.navigateBack();
 			},
 			toRegist(){
-				this.$api.msg('去注册');
+				uni.navigateTo({
+					url:"/pages/public/register"
+				})
 			},
 			async toLogin(){
 				this.logining = true;

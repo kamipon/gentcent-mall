@@ -6,7 +6,10 @@
     "versionCode" : "100",
     "transformPx" : false,
     "h5" : {
-        "title" : "pdd"
+        "title" : "pdd",
+        "router" : {
+            "mode" : "history"
+        }
     },
     "app-plus" : {
         /* 5+App特有相关 */
