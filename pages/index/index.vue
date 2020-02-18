@@ -258,7 +258,6 @@ export default {
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
 			let id = item.goodsId;
-			console.log(`/pages/product/product?id=${id}`);
 			uni.navigateTo({
 				url: `/pages/product/product?id=${id}`
 			});

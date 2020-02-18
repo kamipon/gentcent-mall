@@ -14,10 +14,10 @@
 					<text class="tit">手机号码</text>
 					<input 
 						type="number" 
-						:value="mobile" 
+						:value="phone" 
 						placeholder="请输入手机号码"
 						maxlength="11"
-						data-key="mobile"
+						data-key="phone"
 						@input="inputChange"
 					/>
 				</view>
@@ -25,7 +25,7 @@
 					<text class="tit">密码</text>
 					<input 
 						type="mobile" 
-						value="" 
+						:value="password" 
 						placeholder="请输入密码"
 						placeholder-class="input-empty"
 						maxlength="20"
@@ -50,13 +50,13 @@
 
 <script>
 	import {  
-        mapMutations  
+        mapActions  
     } from 'vuex';
 	
 	export default{
 		data(){
 			return {
-				mobile: '',
+				phone: '',
 				password: '',
 				logining: false
 			}
@@ -65,7 +65,7 @@
 			
 		},
 		methods: {
-			...mapMutations(['login']),
+			...mapActions(['login']),
 			inputChange(e){
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
@@ -74,34 +74,22 @@
 				uni.navigateBack();
 			},
 			toRegist(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:"/pages/public/register"
 				})
 			},
-			async toLogin(){
+			toLogin(){
 				this.logining = true;
-				const {mobile, password} = this;
-				/* 数据验证模块
-				if(!this.$api.match({
-					mobile,
-					password
-				})){
+				this.login({phone: this.phone,password: this.password}).then(res => {
 					this.logining = false;
-					return;
-				}
-				*/
-				const sendData = {
-					mobile,
-					password
-				};
-				const result = await this.$api.json('userInfo');
-				if(result.status === 1){
-					this.login(result.data);
-                    uni.navigateBack();  
-				}else{
-					this.$api.msg(result.msg);
+					this.$api.msg('登录成功');
+					setTimeout(()=>{
+						uni.navigateBack();
+					}, 200)
+				}).catch(res=>{
 					this.logining = false;
-				}
+					this.$api.msg(res.msg);
+				});
 			}
 		},
 

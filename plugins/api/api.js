@@ -1,10 +1,11 @@
+import store from '../../store'
 export default {
 	$_get(url, data = {}, option = {
 		auth: false
 	}) {
 		if (option.auth) {
-			if (this.$store.state.hasLogin) {
-				data.token = this.$store.state.token;
+			if (store.state.hasLogin) {
+				data.token = store.state.token;
 			} else {
 				uni.navigateTo({
 					url: '/pages/public/login'
@@ -19,17 +20,21 @@ export default {
 				method: "GET"
 			}).then(data => {
 				var [error, res] = data;
-				resolve(res.data);
+				if(!res){
+					console.log(error);
+				}else{
+					resolve(res.data);
+				}
 			})
 		})
 
 	},
-	async $_post(url, data = {}, option = {
+	$_post(url, data = {}, option = {
 		auth: false
 	}) {
 		if (option.auth) {
-			if (this.$store.state.hasLogin) {
-				data.token = this.$store.state.token;
+			if (store.state.hasLogin) {
+				data.token = store.state.token;
 			} else {
 				uni.navigateTo({
 					url: '/pages/public/login'
@@ -47,7 +52,11 @@ export default {
 				},
 			}).then(data => {
 				var [error, res] = data;
-				resolve(res.data);
+				if(!res){
+					console.log(error);
+				}else{
+					resolve(res.data);
+				}
 			})
 		})
 	}
