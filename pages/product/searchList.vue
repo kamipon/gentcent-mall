@@ -1,13 +1,6 @@
 <template>
 	<view class="content">
         <view class="keyword">
-            <div class="uni-page-head-hd">
-                <div class="uni-page-head-btn" @click="navToBack()">
-                    <i class="uni-btn-icon" style="color: rgb(0, 0, 0); 
-                    ">
-                    </i>
-                </div>
-            </div>
             <view class="search">
                 <input maxlength="20"  type="text" :value="keyword"
                 confirm-type="search" @click="navTosearch(keyword)"
@@ -262,7 +255,7 @@
             	padding: 10upx 40upx;
             	font-size: 28upx;
                 height: 50upx;
-                width: 650upx;
+                width: 700upx;
             	border-radius: 50upx;
             }
             .search-icon{
@@ -281,7 +274,8 @@
 	.navbar{
 		position: fixed;
 		left: 0;
-		top: 60upx;
+		top: 180upx;
+        top: calc(var(--window-top) + env(safe-area-inset-top) + 60upx);
 		display: flex;
 		width: 100%;
 		height: 80upx;
