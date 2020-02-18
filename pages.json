@@ -183,16 +183,24 @@
 				}
 			}
 		}, {
+			"path": "pages/search/search",
+			"style": {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "商品搜索"
+                			}
+		}, {
 			"path": "pages/product/list",
 			"style": {
 				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "商品列表"
 			}
 		}, {
-			"path": "pages/product/list2",
+			"path": "pages/product/searchList",
 			"style": {
-				"enablePullDownRefresh": true,
-				"navigationBarTitleText": "商品列表2"
+				"app-plus": {
+                    "titleNView": false //禁用原生导航栏  
+                }  
+            
 			}
 		}, {
 			"path": "pages/product/shop",
