@@ -11,9 +11,9 @@
             <view class="search">
                 <input maxlength="20"  type="text" :value="keyword"
                 confirm-type="search" @click="navTosearch(keyword)"
-                 placeholder="请输入关键词"/>
+                 placeholder="关键词搜索"/>
                 <image src="../../static/zy-search/search.svg" 
-                mode="aspectFit" @click="searchStart()" class="search-icon"></image>
+                mode="aspectFit" @click="navTosearch(keyword)" class="search-icon"></image>
                 
             </view>
         </view>
