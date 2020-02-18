@@ -277,7 +277,7 @@
 				this.favorite = !this.favorite;
 			},
 			buy(){
-                this.$_get("app_goods/generate",{id: this.goodsDeta.goods_id}).then(res => {
+                this.$_get("app_goods/generate",{id: this.goodsDeta.goods_id},{auth: true}).then(res => {
                     this.$store.state.webviewSrc = res.goods_promotion_url_generate_response.goods_promotion_url_list[0].mobile_short_url;
                     uni.navigateTo({
                         url: `/pages/webview/webview`
