@@ -1,4 +1,8 @@
 import store from '../../store'
+
+let preUtl = "http://pdd.chaoniuma.cn/";
+// let preUtl = "http://192.168.50.158/";
+
 export default {
 	$_get(url, data = {}, option = {
 		auth: false
@@ -15,7 +19,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: "http://192.168.42.80/" + url,
+				url: preUtl + url,
 				data,
 				method: "GET"
 			}).then(data => {
@@ -44,7 +48,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: "http://192.168.42.80/" + url,
+				url: preUtl + url,
 				data,
 				method: "POST",
 				header: {
