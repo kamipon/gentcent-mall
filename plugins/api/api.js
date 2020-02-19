@@ -15,7 +15,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: "http://192.168.50.158/" + url,
+				url: "http://192.168.42.80/" + url,
 				data,
 				method: "GET"
 			}).then(data => {
@@ -44,7 +44,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: "http://192.168.50.158/" + url,
+				url: "http://192.168.42.80/" + url,
 				data,
 				method: "POST",
 				header: {

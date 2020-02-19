@@ -1,19 +1,18 @@
 <template>
 	<view class="content">
 		<scroll-view scroll-y class="left-aside">
-			<view v-for="(item,index) in flist" :key="item.id" class="f-item b-b" :class="{active: index === current}" @click="tabtap(item,index)">
-				{{item.name}}
+			<view v-for="(item,index) in cats" :key="item.cat_id" class="f-item b-b" :class="{active: index === current}" @click="tabtap(item,index)">
+				{{item.cat_name}}
 			</view>
 		</scroll-view>
 		<swiper :current="current" vertical class="right-aside" @change="change">
-			<swiper-item v-for="item in flist" :key="item.id" class="s-list">
+			<swiper-item v-for="item in cats" :key="item.cat_id" class="s-list">
 				<scroll-view scroll-y style="height: 100%;">
-					<view v-for="s in item.slist" :key="s.id">
-						<text class="s-item">{{s.name}}</text>
+					<view >
 						<view class="t-list">
-							<view v-for="t in s.tlist" :key="t.id" @click="navToList(s.id, t.id)" class="t-item">
-								<image :src="t.picture"></image>
-								<text>{{t.name}}</text>
+							<view v-for="t in item.slist" :key="t.cat_id" @click="navToList(t.cat_id)" class="t-item">
+								<image src="http://pic.51yuansu.com/pic3/cover/01/55/70/594c83920937c_610.jpg"></image>
+								<text>{{t.cat_name}}</text>
 							</view>
 						</view>
 					</view>
@@ -30,11 +29,24 @@
 			return {
 				current: 0,
 				currentId: 1,
-				flist: []
+				flist: [],
+                cats :[],
 			}
 		},
 		onLoad(){
 			this.loadData();
+            this.$_get("app_goods/cats",{}).then(res => {//获取一级目录
+                let list = res.goods_cats_get_response.goods_cats_list;
+                list.forEach(item=>{
+                    item.slist = [];
+                    this.cats.push(item);
+                    
+                })
+                this.$_get("app_goods/cats",{id:this.cats[0].cat_id}).then(res => {//获取二级目录\
+                    let slist = res.goods_cats_get_response.goods_cats_list;
+                    this.cats[0].slist = slist;
+                });
+            });
 		},
 		methods: {
 			async loadData(){
@@ -58,18 +70,26 @@
 						this.flist.push(item);  //pid为父级id, 没有pid或者pid=0是一级分类
 					}
 				}) 
+                    console.log(this.flist)
 			},
 			//一级分类点击
 			tabtap(item,index){
 				this.currentId = item.id;
+                console.log("+++++++++++++")
 				this.current = index;
 			},
 			change(e){
+                this.$_get("app_goods/cats",{id:this.cats[e.detail.current].cat_id}).then(res => {//获取二级目录
+                    console.log(res.goods_cats_get_response.goods_cats_list)
+                    let slist = res.goods_cats_get_response.goods_cats_list;
+                    this.cats[e.detail.current].slist = slist;
+                    //获取三级目录
+                });
 				this.current = e.detail.current;
 			},
-			navToList(sid, tid){
+			navToList(e){
 				uni.navigateTo({
-					url: `/pages/product/list?fid=${this.currentId}&sid=${sid}&tid=${tid}`
+                	url: `/pages/product/searchList?catId=${e}`
 				})
 			}
 		}

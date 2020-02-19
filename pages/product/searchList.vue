@@ -79,13 +79,19 @@
 				cateList: [],
 				goodsList: [],
                 keyword : "",
+                catId: "",
                 pageIndex : 1,
                 sortType : 0,
 			};
 		},
 		
 		onLoad(options){
-			this.keyword = options.keyword;
+            if(options.keyword){
+                this.keyword = options.keyword;
+            }
+            if(options.catId){
+                this.catId = options.catId;
+            }
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
@@ -139,6 +145,7 @@
                 this.$_get("app_goods/search",
                     {keyword: this.keyword,
                     pageIndex:this.pageIndex,
+                    catId : this.catId,
                     sortType : this.sortType}).then(res => {
                     this.pageIndex+=1;
                     //获取数据
