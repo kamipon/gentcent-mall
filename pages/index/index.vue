@@ -12,7 +12,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWebview({ src: item.url })">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navCarouselList(item.id)">
 					<image :src="item.src" />
 				</swiper-item>
 			</swiper>
@@ -25,19 +25,19 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="navToWebview({ src: urlList2[0] })">
+			<view class="cate-item" @click="navResourceList(4)">
 				<image src="/static/miaosha.png" mode="aspectFill"></image>
 				<text>限时秒杀</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[1] })">
+			<view class="cate-item" @click="navResourceList(3997)">
 				<image src="/static/chongzhi.png" mode="aspectFill"></image>
 				<text>充值中心</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[2] })">
+			<view class="cate-item" @click="navResourceList(3999)">
 				<image src="/static/dianqi.png" mode="aspectFill"></image>
 				<text>电器专场</text>
 			</view>
-			<view class="cate-item" @click="navToWebview({ src: urlList2[3] })">
+			<view class="cate-item" @click="navResourceList(3996)">
 				<image src="/static/butie.png" mode="aspectFill"></image>
 				<text>百亿补贴</text>
 			</view>
@@ -70,10 +70,10 @@
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
-				<text class="tit">分类精选</text>
+				<text class="tit">1.9包邮</text>
 				<text class="tit2">Competitive Products For You</text>
 			</view>
-			<text class="yticon icon-you"></text>
+			<text @click="navChannellList(0)" class="yticon icon-you"></text>
 		</view>
 		<view class="hot-floor">
 			<view class="floor-img-box">
@@ -97,6 +97,14 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="f-header m-t">
+			<image src="/static/temp/h1.png"></image>
+			<view class="tit-box">
+				<text class="tit">今日爆款</text>
+				<text class="tit2">Competitive Products For You</text>
+			</view>
+			<text @click="navChannellList(1)" class="yticon icon-you"></text>
+		</view>
 		<view class="hot-floor">
 			<view class="floor-img-box">
 				<image
@@ -118,6 +126,14 @@
 					</view>
 				</view>
 			</scroll-view>
+		</view>
+		<view class="f-header m-t">
+			<image src="/static/temp/h1.png"></image>
+			<view class="tit-box">
+				<text class="tit">品牌清仓</text>
+				<text class="tit2">Competitive Products For You</text>
+			</view>
+			<text @click="navChannellList(2)" class="yticon icon-you"></text>
 		</view>
 		<view class="hot-floor">
 			<view class="floor-img-box">
@@ -141,6 +157,7 @@
 				</view>
 			</scroll-view>
 		</view>
+		
 
 		<!-- 今日推荐 -->
 		<view class="f-header m-t">
@@ -187,8 +204,9 @@ export default {
 			goodsList: [],
 			pageIndex: 1,
 			more: 'loading',
-			urlList1: [],
-			urlList2: []
+			channelGoodsList_1:[],
+			channelGoodsList_2:[],
+			channelGoodsList_3:[],
 		};
 	},
 	filters: {
@@ -199,17 +217,27 @@ export default {
 	onLoad() {
 		this.loadData();
 		this.loadCarousel();
-		this.loadItemUrl();
 	},
 	onReachBottom() {
 		this.more = 'loading';
 		this.loadData();
 	},
 	methods: {
-		loadItemUrl() {
-			this.$_get('app_index/resource/url', {}).then(res => {
-				this.urlList1 = res.data1;
-				this.urlList2 = res.data2;
+		
+		
+		navResourceList(type){
+			this.$_post('app_index/resource/gen', {type},{auth:true}).then(res => {
+				this.navToWebview({src:res.data.url});
+			});
+		},
+		navCarouselList(id){
+			this.$_post('app_index/theme/gen', {id},{auth:true}).then(res => {
+				this.navToWebview({src:res.data.url});
+			});
+		},
+		navChannellList(type){
+			this.$_post('app_index/channel/gen', {type},{auth:true}).then(res => {
+				this.navToWebview({src:res.data.url});
 			});
 		},
 		loadCarousel() {
@@ -218,7 +246,7 @@ export default {
 					this.carouselList.push({
 						background: 'rgb(203, 87, 60)',
 						src: item.imageUrl,
-						url: item.url
+						id: item.id
 					});
 				});
 				this.titleNViewBackground = 'rgb(203, 87, 60)';
@@ -433,7 +461,7 @@ page {
 		margin-bottom: 14upx;
 		border-radius: 50%;
 		box-shadow: 4upx 4upx 20upx rgba(121, 33, 52, 0.35);
-		background-color: #ff9a8b;
+		background-color: #fff;
 	}
 }
 .ad-1 {

@@ -1,7 +1,7 @@
 import store from '../../store'
 
-let preUtl = "http://pdd.chaoniuma.cn/";
-// let preUtl = "http://192.168.50.158/";
+// let preUtl = "http://pdd.chaoniuma.cn/";
+let preUtl = "http://192.168.50.158/";
 
 export default {
 	$_get(url, data = {}, option = {

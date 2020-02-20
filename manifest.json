@@ -8,7 +8,12 @@
     "h5" : {
         "title" : "pdd",
         "router" : {
-            "mode" : "history"
+            "mode" : "history",
+            "base" : "/web/"
+        },
+        "domain" : "http://pdd.chaoniuma.cn/",
+        "devServer" : {
+            "https" : false
         }
     },
     "app-plus" : {
