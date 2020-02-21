@@ -1,43 +1,45 @@
 <template>
 	<view>
+		<view v-if="Object.keys(order).length!=0">
+            <view class="goods-section">
+            	
+            	<!-- 商品列表 -->
+            	<view class="g-item">
+            		<image :src="order.goodsThumbnailUrl"></image>
+            		<view class="right">
+            			<text class="title clamp">{{order.goodsName}}</text>
+            			<text class="spec"> </text>
+            			<view class="price-box">
+            				<text class="price" style="color: #fa436a;">￥{{order.goodsPrice | price}}</text>
+            				<text class="number">x {{order.goodsQuantity}}</text>
+            			</view>
+            		</view>
+            	</view>
+            </view>
+            
+            
+            <!-- 金额明细 -->
+            <view class="yt-list">
+            	<view class="yt-list-cell b-b">
+            		<text class="cell-tit clamp">商品金额</text>
+            		<text class="cell-tip">￥{{order.goodsPrice*order.goodsQuantity | price}}</text>
+            	</view>
+            	<view class="yt-list-cell b-b">
+            		<text class="cell-tit clamp">优惠金额</text>
+            		<text class="cell-tip red">-￥{{order.goodsPrice*order.goodsQuantity-order.orderAmount | price}}</text>
+            	</view>
+            
+            	<view class="yt-list-cell b-b">
+            		<text class="cell-tit clamp">订单状态</text>
+            		<text class="cell-tip clamp">{{order.orderStatus | orderStatus }}</text>
+            	</view>
+            	<view class="yt-list-cell b-b">
+            		<text class="cell-tit clamp">创建时间</text>
+            		<text class="cell-tip clamp">{{order.orderCreateTime | dateFormat }}</text>
+            	</view>
+            </view>
+        </view>
 		
-		<view class="goods-section">
-			
-			<!-- 商品列表 -->
-			<view class="g-item">
-				<image :src="order.goodsThumbnailUrl"></image>
-				<view class="right">
-					<text class="title clamp">{{order.goodsName}}</text>
-					<text class="spec"> </text>
-					<view class="price-box">
-						<text class="price" style="color: #fa436a;">￥{{order.goodsPrice | price}}</text>
-						<text class="number">x {{order.goodsQuantity}}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-
-		
-		<!-- 金额明细 -->
-		<view class="yt-list">
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
-				<text class="cell-tip">￥{{order.goodsPrice*order.goodsQuantity | price}}</text>
-			</view>
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">-￥{{order.goodsPrice*order.goodsQuantity-order.orderAmount | price}}</text>
-			</view>
-
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">订单状态</text>
-				<text class="cell-tip clamp">{{order.orderStatus | orderStatus }}</text>
-			</view>
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">创建时间</text>
-				<text class="cell-tip clamp">{{order.orderCreateTime | dateFormat }}</text>
-			</view>
-		</view>
 		
 		<!-- 底部 -->
 		<view class="footer">

@@ -42,7 +42,7 @@
 					<text class="num">128.8</text>
 					<text>余额</text>
 				</view>
-				<view class="tj-item">
+				<view class="tj-item" @click="navTo('/pages/user/coupon')">
 					<text class="num">0</text>
 					<text>优惠券</text>
 				</view>

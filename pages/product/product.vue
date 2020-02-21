@@ -165,7 +165,8 @@
 			
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn fx" @click="share">分享</button>
-				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即抢券</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn gm"
+                 @click="buy">￥{{(goodsDeta.coupon_discount)| price}} 领券</button>
 			</view>
 		</view>
 		
@@ -277,13 +278,28 @@
 				this.favorite = !this.favorite;
 			},
 			buy(){
-                this.$_get("app_goods/generate",{id: this.goodsDeta.goods_id},{auth: true}).then(res => {
-                    this.$store.state.webviewSrc = res.goods_promotion_url_generate_response.goods_promotion_url_list[0].mobile_short_url;
-                    uni.navigateTo({
-                        url: `/pages/webview/webview`
-
-                    })
-                })
+                uni.showModal({
+                    content: `确定需要使用${this.goodsDeta.coupon_discount/100}点券创建订单吗?`,
+                    success: (e)=>{
+                        if(e.confirm){
+                            this.$_get("app_coupon/generate",{
+                                id: this.goodsDeta.goods_id,
+                                money: this.goodsDeta.coupon_discount,
+                                name: this.goodsDeta.goods_name
+                                },{auth: true}).then(res => {
+                                    if(res.flag){
+                                        this.$store.state.webviewSrc =res.coupon.webUrl ;
+                                        uni.navigateTo({
+                                            url: `/pages/webview/webview`
+                                        })
+                                    }else{
+                                        alert(res.msg)
+                                    }
+                            })
+                        }
+                    }
+                });
+                
 			},
 			stopPrevent(){}
 		},
