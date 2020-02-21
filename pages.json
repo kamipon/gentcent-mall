@@ -116,6 +116,14 @@
 				}
 			}
 		}, {
+			"path": "pages/user/coupon",
+			"style": {
+				"navigationBarTitleText": "我的优惠券",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}, {
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "我的订单",
