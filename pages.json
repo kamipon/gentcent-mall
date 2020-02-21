@@ -124,6 +124,14 @@
 				}
 			}
 		}, {
+			"path": "pages/order/orderDetails",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}, {
 			"path": "pages/money/money",
 			"style": {}
 		}, {
