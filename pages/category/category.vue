@@ -9,6 +9,7 @@
 			<swiper-item v-for="item in cats" :key="item.cat_id" class="s-list">
 				<scroll-view scroll-y style="height: 100%;">
 					<view >
+						<text class="s-item">{{item.cat_name}}</text>
 						<view class="t-list">
 							<view v-for="t in item.slist" :key="t.cat_id" @click="navToList(t.cat_id)" class="t-item">
 								<text>{{t.cat_name}}</text>
