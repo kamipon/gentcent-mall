@@ -27,45 +27,30 @@
 						class="order-item"
 					>
 						<view class="i-top b-b">
-							<text class="time">{{item.time}}</text>
-							<text class="state" :style="{color: item.stateTipColor}">{{item.stateTip}}</text>
+							<text class="time">{{item.goodsName}}</text>
+							<text class="state" :style="{color: orderStateExp(item.orderStatus).stateTipColor}">
+                            {{orderStateExp(item.orderStatus).stateTip}}</text>
 							<text 
 								v-if="item.state===9" 
 								class="del-btn yticon icon-iconfontshanchu1"
 								@click="deleteOrder(index)"
 							></text>
 						</view>
-						
-						<scroll-view v-if="item.goodsList.length > 1" class="goods-box" scroll-x>
-							<view
-								v-for="(goodsItem, goodsIndex) in item.goodsList" :key="goodsIndex"
-								class="goods-item"
-							>
-								<image class="goods-img" :src="goodsItem.image" mode="aspectFill"></image>
-							</view>
-						</scroll-view>
-						<view 
-							v-if="item.goodsList.length === 1" 
-							class="goods-box-single"
-							v-for="(goodsItem, goodsIndex) in item.goodsList" :key="goodsIndex"
-						>
-							<image class="goods-img" :src="goodsItem.image" mode="aspectFill"></image>
-							<view class="right">
-								<text class="title clamp">{{goodsItem.title}}</text>
-								<text class="attr-box">{{goodsItem.attr}}  x {{goodsItem.number}}</text>
-								<text class="price">{{goodsItem.price}}</text>
-							</view>
-						</view>
+                        <scroll-view class="goods-box" scroll-x>
+                        	<view class="goods-item">
+                        		<image class="goods-img" :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
+                        	</view>
+                        </scroll-view>
 						
 						<view class="price-box">
 							共
-							<text class="num">7</text>
+							<text class="num">{{item.goodsQuantity}}</text>
 							件商品 实付款
-							<text class="price">143.7</text>
+							<text class="price">{{item.orderAmount | price}}</text>
 						</view>
-						<view class="action-box b-t" v-if="item.state != 9">
-							<button class="action-btn" @click="cancelOrder(item)">取消订单</button>
-							<button class="action-btn recom">立即支付</button>
+						<view class="action-box b-t" >
+							<button class="action-btn" @click="cancelOrder(item)" v-show="false"></button>
+							<button class="action-btn recom" @click="navToOrderDetails(item.id)">查看详情</button>
 						</view>
 					</view>
 					 
@@ -91,31 +76,29 @@
 				tabCurrentIndex: 0,
 				navList: [{
 						state: 0,
+                        pageIndex : 1,
 						text: '全部',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 1,
-						text: '待付款',
+                        pageIndex : 1,
+						text: '已付款',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 2,
-						text: '待收货',
+                        pageIndex : 1,
+						text: '已结束',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 3,
-						text: '待评价',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 4,
-						text: '售后',
+                        pageIndex : 1,
+						text: '已失效',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -141,13 +124,17 @@
 		},
 		 
 		methods: {
+            navToOrderDetails(id){
+                uni.navigateTo({
+                    url: `/pages/order/orderDetails?id=${id}`
+                })
+            },
 			//获取订单列表
 			loadData(source){
 				//这里是将订单挂载到tab列表下
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
 				let state = navItem.state;
-				
 				if(source === 'tabChange' && navItem.loaded === true){
 					//tab切换只有第一次需要加载数据
 					return;
@@ -158,27 +145,33 @@
 				}
 				
 				navItem.loadingType = 'loading';
-				
-				setTimeout(()=>{
-					let orderList = Json.orderList.filter(item=>{
-						//添加不同状态下订单的表现形式
-						item = Object.assign(item, this.orderStateExp(item.state));
-						//演示数据所以自己进行状态筛选
-						if(state === 0){
-							//0为全部订单
-							return item;
-						}
-						return item.state === state
-					});
-					orderList.forEach(item=>{
-						navItem.orderList.push(item);
-					})
-					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
-					this.$set(navItem, 'loaded', true);
-					
-					//判断是否还有数据， 有改为 more， 没有改为noMore 
-					navItem.loadingType = 'more';
-				}, 600);	
+					// let orderList = Json.orderList.filter(item=>{
+					// 	//添加不同状态下订单的表现形式
+					// 	item = Object.assign(item, this.orderStateExp(item.state));
+					// 	//演示数据所以自己进行状态筛选
+					// 	if(state === 0){
+					// 		//0为全部订单
+					// 		return item;
+					// 	}
+					// 	return item.state === state
+					// });
+                    this.$_get("app_order/list",{
+                        status: index,
+                        pageIndex : navItem.pageIndex},{auth: true}).then(res => {
+                            res.orderList.forEach(item=>{
+                        	navItem.orderList.push(item);
+                        })
+                        //loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
+                        this.$set(navItem, 'loaded', true);
+                        //判断是否还有数据， 有改为 more， 没有改为noMore 
+                            
+                        if(res.total>10*navItem.pageIndex){
+                            navItem.loadingType = 'more';
+                        }else{
+                            navItem.loadingType = 'noMor';
+                        }
+                        navItem.pageIndex+=1;
+                    })
 			}, 
 
 			//swiper 切换
@@ -228,11 +221,11 @@
 					stateTipColor = '#fa436a';
 				switch(+state){
 					case 1:
-						stateTip = '待付款'; break;
+						stateTip = '已付款'; break;
 					case 2:
-						stateTip = '待发货'; break;
+						stateTip = '已结束'; break;
 					case 9:
-						stateTip = '订单已关闭'; 
+						stateTip = '订单失效'; 
 						stateTipColor = '#909399';
 						break;
 						
@@ -241,6 +234,28 @@
 				return {stateTip, stateTipColor};
 			}
 		},
+        filters:{
+            price(val){
+                return val/100
+            },
+            dateFormat(val){
+                function timeAdd0(str) {
+                    if (str < 10) {
+                        str = '0' + str;
+                    }
+                    return str
+                }
+                var time = new Date(val*1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                return y + '-' + timeAdd0(m) + '-' + timeAdd0(d) ;
+
+            }            
+        }
 	}
 </script>
 
