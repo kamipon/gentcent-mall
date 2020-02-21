@@ -12,9 +12,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navCarouselList(item.id)">
-					<image :src="item.src" />
-				</swiper-item>
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navCarouselList(item.id)"><image :src="item.src" /></swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
 			<view class="swiper-dots">
@@ -29,128 +27,81 @@
 				<image src="/static/miaosha.png" mode="aspectFill"></image>
 				<text>限时秒杀</text>
 			</view>
-			<view class="cate-item" @click="navResourceList(3997)">
+			<view class="cate-item" @click="navResourceList(39997)">
 				<image src="/static/chongzhi.png" mode="aspectFill"></image>
 				<text>充值中心</text>
 			</view>
-			<view class="cate-item" @click="navResourceList(3999)">
-				<image src="/static/dianqi.png" mode="aspectFill"></image>
+			<view class="cate-item" @click="navResourceList(39999)">
+				<image style="padding: 4px;" src="/static/dianqi.png" mode="aspectFill"></image>
 				<text>电器专场</text>
 			</view>
-			<view class="cate-item" @click="navResourceList(3996)">
-				<image src="/static/butie.png" mode="aspectFill"></image>
+			<view class="cate-item" @click="navResourceList(39996)">
+				<image style="padding: 4px;" src="/static/baiyi.png" mode="aspectFill"></image>
 				<text>百亿补贴</text>
 			</view>
-		</view>
-
-		<view class="ad-1"><image src="/static/temp/ad1.jpg" mode="scaleToFill"></image></view>
-
-		<!-- 秒杀楼层 -->
-		<view class="seckill-section m-t">
-			<view class="s-header">
-				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-				<text class="tip">8点场</text>
-				<text class="hour timer">07</text>
-				<text class="minute timer">13</text>
-				<text class="second timer">55</text>
-				<text class="yticon icon-you"></text>
+			<view class="cate-item" @click="navZhuanPan()">
+				<image style="padding: 4px;" src="/static/zhuanpan.png" mode="aspectFill"></image>
+				<text>转盘免单</text>
 			</view>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp2">{{ item.title }}</text>
-						<text class="price">￥{{ item.price }}</text>
-					</view>
-				</view>
-			</scroll-view>
 		</view>
 
 		<!-- 分类推荐楼层 -->
-		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">1.9包邮</text>
-				<text class="tit2">Competitive Products For You</text>
-			</view>
-			<text @click="navChannellList(0)" class="yticon icon-you"></text>
-		</view>
 		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image
-					class="floor-img"
-					src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409398864&di=4a12763adccf229133fb85193b7cc08f&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F19%2F20170319150032_MNwmn.jpeg"
-					mode="scaleToFill"
-				></image>
+			<view class="floor-img-box" @click="navChannellList(1)">
+				<image class="floor-img" src="//pinduoduoimg.yangkeduo.com/jinbao/today_burst_banner.png" mode="widthFix"></image>
 			</view>
 			<scroll-view class="floor-list" scroll-x>
 				<view class="scoll-wrapper">
-					<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp2">{{ item.title }}</text>
-						<text class="price">￥{{ item.price }}</text>
+					<view v-for="(item, index) in channelGoodsList_2" :key="index" class="floor-item" @click="navToDetailPage(item)">
+						<image :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
+						<text class="title clamp">{{ item.goodsName }}</text>
+						<view class="clamp">
+							<text class="price">￥{{ ((item.minGroupPrice - item.couponDiscount) / 100) | toFiexd }}</text>
+							<text class="discount-price">￥{{ (item.minGroupPrice / 100) | toFiexd }}</text>
+						</view>
 					</view>
-					<view class="more">
+					<view @click="navChannellList(1)" class="more">
 						<text>查看全部</text>
 						<text>More+</text>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
-		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">今日爆款</text>
-				<text class="tit2">Competitive Products For You</text>
-			</view>
-			<text @click="navChannellList(1)" class="yticon icon-you"></text>
-		</view>
 		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image
-					class="floor-img"
-					src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409984228&di=dee176242038c2d545b7690b303d65ea&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F5ef4da9f17faaf4612f0d5046f4161e556e9bbcfdb5b-rHjf00_fw658"
-					mode="scaleToFill"
-				></image>
+			<view class="floor-img-box" @click="navChannellList(0)">
+				<image class="floor-img" src="//pinduoduoimg.yangkeduo.com/jinbao/one_nine_banner.png" mode="widthFix"></image>
 			</view>
 			<scroll-view class="floor-list" scroll-x>
 				<view class="scoll-wrapper">
-					<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
-						<image :src="item.image3" mode="aspectFill"></image>
-						<text class="title clamp2">{{ item.title }}</text>
-						<text class="price">￥{{ item.price }}</text>
+					<view v-for="(item, index) in channelGoodsList_1" :key="index" class="floor-item" @click="navToDetailPage(item)">
+						<image :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
+						<text class="title clamp">{{ item.goodsName }}</text>
+						<view style="overflow: hidden; width: 100%;">
+							<text class="price">￥{{ ((item.minGroupPrice - item.couponDiscount) / 100) | toFiexd }}</text>
+							<text class="discount-price">￥{{ (item.minGroupPrice / 100) | toFiexd }}</text>
+						</view>
 					</view>
-					<view class="more">
+					<view @click="navChannellList(0)" class="more">
 						<text>查看全部</text>
 						<text>More+</text>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
-		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">品牌清仓</text>
-				<text class="tit2">Competitive Products For You</text>
-			</view>
-			<text @click="navChannellList(2)" class="yticon icon-you"></text>
-		</view>
+
 		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image
-					class="floor-img"
-					src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409794730&di=12b840ec4f5748ef06880b85ff63e34e&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01dc03589ed568a8012060c82ac03c.jpg%40900w_1l_2o_100sh.jpg"
-					mode="scaleToFill"
-				></image>
+			<view @click="navChannellList(2)" class="floor-img-box">
+				<image class="floor-img" src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2656106131,1339985382&fm=26&gp=0.jpg" mode="widthFix"></image>
 			</view>
 			<scroll-view class="floor-list" scroll-x>
 				<view class="scoll-wrapper">
-					<view v-for="(item, index) in goodsList" :key="index" class="floor-item" @click="navToDetailPage(item)">
-						<image :src="item.image2" mode="aspectFill"></image>
-						<text class="title clamp2">{{ item.title }}</text>
-						<text class="price">￥{{ item.price }}</text>
+					<view v-for="(item, index) in channelGoodsList_3" :key="index" class="floor-item" @click="navToDetailPage(item)">
+						<image :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
+						<text class="title clamp">{{ item.goodsName }}</text>
+						<text class="price">￥{{ ((item.minGroupPrice - item.couponDiscount) / 100) | toFiexd }}</text>
+						<text class="discount-price">￥{{ (item.minGroupPrice / 100) | toFiexd }}</text>
 					</view>
-					<view class="more">
+					<view @click="navChannellList(2)" class="more">
 						<text>查看全部</text>
 						<text>More+</text>
 					</view>
@@ -158,15 +109,15 @@
 			</scroll-view>
 		</view>
 		
-
 		<!-- 今日推荐 -->
 		<view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
-				<text class="tit">热门推荐</text>
-				<text class="tit2">Popular recommend</text>
+				<view class="block"></view>
+				<text class="tit">精选</text>
+				<text class="tit2">用心打造精致生活</text>
 			</view>
-			<text class="yticon icon-you"></text>
+			<text @click="navToList()" class="more-text">更多</text>
+			<text @click="navToList()" class="yticon icon-you"></text>
 		</view>
 
 		<view class="guess-section">
@@ -187,6 +138,7 @@
 				</text>
 			</view>
 			<view style="text-align: center;width: 100%;"><uni-load-more :status="more"></uni-load-more></view>
+			<view @click="scrollToTop()" :class="{ 'bgt-top-button-show': showScrollToTopBtn }" class="bgt-go-top"><text>顶部</text></view>
 		</view>
 	</view>
 </template>
@@ -204,9 +156,10 @@ export default {
 			goodsList: [],
 			pageIndex: 1,
 			more: 'loading',
-			channelGoodsList_1:[],
-			channelGoodsList_2:[],
-			channelGoodsList_3:[],
+			channelGoodsList_1: [],
+			channelGoodsList_2: [],
+			channelGoodsList_3: [],
+			showScrollToTopBtn: false
 		};
 	},
 	filters: {
@@ -214,30 +167,46 @@ export default {
 			return parseFloat(num).toFixed(pre);
 		}
 	},
+	onPageScroll({ scrollTop }) {
+		if (scrollTop >= 1600) {
+			this.showScrollToTopBtn = true;
+		} else {
+			this.showScrollToTopBtn = false;
+		}
+	},
 	onLoad() {
 		this.loadData();
 		this.loadCarousel();
+		this.loadChanneGoods();
 	},
 	onReachBottom() {
 		this.more = 'loading';
 		this.loadData();
 	},
 	methods: {
-		
-		
-		navResourceList(type){
-			this.$_post('app_index/resource/gen', {type},{auth:true}).then(res => {
-				this.navToWebview({src:res.data.url});
+		navToList() {
+			uni.navigateTo({
+				url: `/pages/product/searchList`
 			});
 		},
-		navCarouselList(id){
-			this.$_post('app_index/theme/gen', {id},{auth:true}).then(res => {
-				this.navToWebview({src:res.data.url});
+		navZhuanPan() {
+			this.$_post('app_index/lottery/gen', {}, { auth: true }).then(res => {
+				this.navToWebview({ src: res.data[0].singleUrlList.url });
 			});
 		},
-		navChannellList(type){
-			this.$_post('app_index/channel/gen', {type},{auth:true}).then(res => {
-				this.navToWebview({src:res.data.url});
+		navResourceList(type) {
+			this.$_post('app_index/resource/gen', { type }, { auth: true }).then(res => {
+				this.navToWebview({ src: res.data.url });
+			});
+		},
+		navCarouselList(id) {
+			this.$_post('app_index/theme/gen', { id }, { auth: true }).then(res => {
+				this.navToWebview({ src: res.data.url });
+			});
+		},
+		navChannellList(type) {
+			this.$_post('app_index/channel/gen', { type }, { auth: true }).then(res => {
+				this.navToWebview({ src: res.data.url });
 			});
 		},
 		loadCarousel() {
@@ -251,6 +220,14 @@ export default {
 				});
 				this.titleNViewBackground = 'rgb(203, 87, 60)';
 				this.swiperLength = this.carouselList.length;
+			});
+		},
+		loadChanneGoods() {
+			this.$_get('app_index/goods/channel', {}).then(res => {
+				console.log(res);
+				this.channelGoodsList_1 = res.list1;
+				this.channelGoodsList_2 = res.list2;
+				this.channelGoodsList_3 = res.list3;
 			});
 		},
 		/**
@@ -289,7 +266,20 @@ export default {
 			uni.navigateTo({
 				url: `/pages/product/product?id=${id}`
 			});
+		},
+		scrollToTop() {
+			uni.pageScrollTo({
+				scrollTop: 0,
+				duration: 300
+			});
 		}
+	},
+	onReady() {
+		uni.createIntersectionObserver(this)
+			.relativeTo('.guess-section', { bottom: 100 })
+			.observe('.bgt-go-top', res => {
+				console.log(res);
+			});
 	},
 	// #ifndef MP
 	// 标题栏input搜索框点击
@@ -297,25 +287,6 @@ export default {
 		uni.navigateTo({
 			url: `/pages/search/search`
 		});
-	},
-	//点击导航栏 buttons 时触发
-	onNavigationBarButtonTap(e) {
-		const index = e.index;
-		if (index === 0) {
-			this.$api.msg('点击了扫描');
-		} else if (index === 1) {
-			// #ifdef APP-PLUS
-			const pages = getCurrentPages();
-			const page = pages[pages.length - 1];
-			const currentWebview = page.$getAppWebview();
-			currentWebview.hideTitleNViewButtonRedDot({
-				index
-			});
-			// #endif
-			uni.navigateTo({
-				url: '/pages/notice/notice'
-			});
-		}
 	}
 	// #endif
 };
@@ -446,8 +417,10 @@ page {
 	justify-content: space-around;
 	align-items: center;
 	flex-wrap: wrap;
-	padding: 30upx 22upx;
+	padding: 20upx 22upx;
 	background: #fff;
+	z-index: 999;
+	position: relative;
 	.cate-item {
 		display: flex;
 		flex-direction: column;
@@ -459,105 +432,55 @@ page {
 		width: 88upx;
 		height: 88upx;
 		margin-bottom: 14upx;
-		border-radius: 50%;
-		box-shadow: 4upx 4upx 20upx rgba(121, 33, 52, 0.35);
-		background-color: #fff;
 	}
 }
 .ad-1 {
 	width: 100%;
-	height: 210upx;
-	padding: 10upx 0;
+	height: 312upx;
 	background: #fff;
+	margin-top: -50upx;
 	image {
 		width: 100%;
 		height: 100%;
-	}
-}
-/* 秒杀专区 */
-.seckill-section {
-	padding: 4upx 30upx 24upx;
-	background: #fff;
-	.s-header {
-		display: flex;
-		align-items: center;
-		height: 92upx;
-		line-height: 1;
-		.s-img {
-			width: 140upx;
-			height: 30upx;
-		}
-		.tip {
-			font-size: $font-base;
-			color: $font-color-light;
-			margin: 0 20upx 0 40upx;
-		}
-		.timer {
-			display: inline-block;
-			width: 40upx;
-			height: 36upx;
-			text-align: center;
-			line-height: 36upx;
-			margin-right: 14upx;
-			font-size: $font-sm + 2upx;
-			color: #fff;
-			border-radius: 2px;
-			background: rgba(0, 0, 0, 0.8);
-		}
-		.icon-you {
-			font-size: $font-lg;
-			color: $font-color-light;
-			flex: 1;
-			text-align: right;
-		}
-	}
-	.floor-list {
-		white-space: nowrap;
-	}
-	.scoll-wrapper {
-		display: flex;
-		align-items: flex-start;
-	}
-	.floor-item {
-		width: 150upx;
-		margin-right: 20upx;
-		font-size: $font-sm + 2upx;
-		color: $font-color-dark;
-		line-height: 1.8;
-		image {
-			width: 150upx;
-			height: 150upx;
-			border-radius: 6upx;
-		}
-		.price {
-			color: $uni-color-primary;
-		}
 	}
 }
 
 .f-header {
 	display: flex;
 	align-items: center;
-	height: 140upx;
+	height: 120upx;
 	padding: 6upx 30upx 8upx;
-	background: #fff;
+	background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+	box-shadow: 2upx -2upx 10upx rgba(113, 101, 104, 0.07);
 	image {
 		flex-shrink: 0;
 		width: 80upx;
 		height: 80upx;
 		margin-right: 20upx;
 	}
+	.block {
+		height: 44upx;
+		width: 8upx;
+		background-color: rgb(247, 167, 0);
+		margin-right: 10upx;
+	}
+	.more-text {
+		font-size: 26upx;
+		color: $font-color-light;
+	}
 	.tit-box {
 		flex: 1;
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
+		align-items: center;
 	}
 	.tit {
-		font-size: $font-lg + 2upx;
-		color: #font-color-dark;
+		font-size: $font-lg + 4upx;
+		color: rgb(247, 167, 0);
 		line-height: 1.3;
 	}
 	.tit2 {
+		margin-left: 10upx;
 		font-size: $font-sm;
 		color: $font-color-light;
 	}
@@ -592,12 +515,10 @@ page {
 	.floor-list {
 		white-space: nowrap;
 		padding: 20upx;
-		padding-right: 50upx;
 		border-radius: 6upx;
-		margin-top: -140upx;
-		margin-left: 30upx;
-		background: #fff;
+		margin-top: -80upx;
 		box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+		background: rgba(245, 245, 245, 0.8);
 		position: relative;
 		z-index: 1;
 	}
@@ -606,18 +527,27 @@ page {
 		align-items: flex-start;
 	}
 	.floor-item {
-		width: 180upx;
+		width: 240upx;
 		margin-right: 20upx;
 		font-size: $font-sm + 2upx;
 		color: $font-color-dark;
 		line-height: 1.8;
 		image {
-			width: 180upx;
-			height: 180upx;
+			width: 240upx;
+			height: 240upx;
 			border-radius: 6upx;
 		}
 		.price {
 			color: $uni-color-primary;
+		}
+		.discount-price {
+			font-size: 24upx;
+			color: $font-color-grey;
+			line-height: 1;
+			margin-left: 10upx;
+			font-weight: 400;
+			width: 100%;
+			text-decoration: line-through;
 		}
 	}
 	.more {
@@ -626,10 +556,10 @@ page {
 		justify-content: center;
 		flex-direction: column;
 		flex-shrink: 0;
-		width: 180upx;
-		height: 180upx;
+		width: 240upx;
+		height: 240upx;
 		border-radius: 6upx;
-		background: #f3f3f3;
+		background: #fff;
 		font-size: $font-base;
 		color: $font-color-light;
 		text:first-child {
@@ -718,5 +648,33 @@ page {
 		color: $font-color-red;
 		padding: 0 4upx;
 	}
+}
+.bgt-go-top {
+	display: block;
+	width: 84upx;
+	height: 84upx;
+	position: fixed;
+	right: 16upx;
+	bottom: 128upx;
+	z-index: 999;
+	background-image: url(data:image/png;base64,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);
+	background-size: contain;
+	opacity: 0;
+	-webkit-transition: bottom 0.8s ease, opacity 0.6s ease;
+	text {
+		position: absolute;
+		bottom: 14upx;
+		width: 100%;
+		display: block;
+		height: 24upx;
+		line-height: 24upx;
+		text-align: center;
+		font-size: 24upx;
+		color: #333;
+	}
+}
+.bgt-top-button-show {
+	bottom: 128upx;
+	opacity: 1;
 }
 </style>

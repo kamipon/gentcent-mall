@@ -11,7 +11,6 @@
 					<view >
 						<view class="t-list">
 							<view v-for="t in item.slist" :key="t.cat_id" @click="navToList(t.cat_id)" class="t-item">
-								<image src="http://pic.51yuansu.com/pic3/cover/01/55/70/594c83920937c_610.jpg"></image>
 								<text>{{t.cat_name}}</text>
 							</view>
 						</view>
@@ -92,7 +91,15 @@
                 	url: `/pages/product/searchList?catId=${e}`
 				})
 			}
+		},
+		// #ifndef MP
+		// 标题栏input搜索框点击
+		onNavigationBarSearchInputClicked: async function(e) {
+			uni.navigateTo({
+				url: `/pages/search/search`
+			});
 		}
+		// #endif
 	}
 </script>
 
@@ -108,7 +115,7 @@
 	}
 	.left-aside {
 		flex-shrink: 0;
-		width: 200upx;
+		width: 250upx;
 		height: 100%;
 		background-color: #f8f8f8;
 	}
@@ -121,6 +128,14 @@
 		font-size: 28upx;
 		color: $font-color-base;
 		position: relative;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: center;
+		line-height: 50upx;
+		padding: 0 20upx;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		display: -webkit-box;
 		&.active{
 			color: $base-color;
 			background: #fff;
@@ -173,7 +188,18 @@
 		width: 176upx;
 		font-size: 24upx;
 		color: #666;
-		padding-bottom: 20upx;
+		background-color: $backg-color-grey;
+		margin: 10upx 20upx;
+		height: 70upx;
+		
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: center;
+		line-height: 35upx;
+		padding: 0 20upx;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		display: -webkit-box;
 		
 		image{
 			width: 120upx;

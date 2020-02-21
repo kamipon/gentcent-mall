@@ -5,7 +5,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// #ifdef MP 
-				"navigationBarTitleText": "Dloud商城",
+				"navigationBarTitleText": "拼多多优惠券",
 				//"navigationStyle": "custom",
 				// #endif 
 				"app-plus": {
@@ -14,27 +14,10 @@
 						"searchInput": {
 							"backgroundColor": "rgba(231, 231, 231,.7)",
 							"borderRadius": "16px",
-							"placeholder": "请输入地址 如：大钟寺",
+							"placeholder": "复制标题 搜拼多多优惠券",
 							"disabled": true,
 							"placeholderColor": "#606266"
-						},
-						"buttons": [{
-								"fontSrc": "/static/yticon.ttf",
-								"text": "\ue60d",
-								"fontSize": "26",
-								"color": "#303133",
-								"float": "left",
-								"background": "rgba(0,0,0,0)"
-							},
-							{
-								"fontSrc": "/static/yticon.ttf",
-								"text": "\ue744",
-								"fontSize": "27",
-								"color": "#303133",
-								"background": "rgba(0,0,0,0)",
-								"redDot": true
-							}
-						]
+						}
 					}
 				}
 			}
@@ -179,7 +162,16 @@
 			"style": {
 				"navigationBarTitleText": "分类",
 				"app-plus": {
-					"bounce": "none"
+					"titleNView": {
+						"type": "default",
+						"searchInput": {
+							"backgroundColor": "rgba(231, 231, 231,.7)",
+							"borderRadius": "16px",
+							"placeholder": "复制标题 搜拼多多优惠券",
+							"disabled": true,
+							"placeholderColor": "#606266"
+						}
+					}
 				}
 			}
 		}, {
