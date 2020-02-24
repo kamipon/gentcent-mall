@@ -45,7 +45,7 @@ const store = new Vuex.Store({
 		},
 		loginWithToken({state,commit,dispatch}, token) {
 			return new Promise((resolve,reject) => {
-				api.$_post('app_member/login_token', {token}).then(res => {
+				api.$_post('app_member/login_token', {token},{loading:false}).then(res => {
 					if(res.errcode==200){
 						commit('login',{member:res.member,token:res.token});
 						resolve(res);

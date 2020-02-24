@@ -227,8 +227,8 @@
 			},
 			{
 				"pagePath": "pages/collect/collect",
-				"iconPath": "static/tab-cart.png",
-				"selectedIconPath": "static/tab-cart-current.png",
+				"iconPath": "static/collect.png",
+				"selectedIconPath": "static/collect-current.png",
 				"text": "收藏"
 			},
 			{

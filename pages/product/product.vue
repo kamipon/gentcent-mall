@@ -19,14 +19,15 @@
 				<text class=""></text>
 				<text class="price-tip">券后价 ¥ </text>
 				<text class="price">{{goodsDeta.min_group_price-goodsDeta.coupon_discount | price }}</text>
-                <view class="rewards">预估积分:+9909</view>
+				
+                <!-- <view class="rewards" >预估积分:+9909</view> -->
+				
 			</view>
             <view class="m-price">
 				<text>原价</text> <text class="num">¥{{goodsDeta.min_group_price |price}}</text>
             </view>
 			<text class="title">{{goodsDeta.goods_name}}</text>
 			<view class="bot-row">
-				<text>X包邮</text>
 				<text class="sales">已售 <text class="num red">{{goodsDeta.sales_tip}}</text> 件</text>
 			</view>
 		</view>
@@ -38,7 +39,7 @@
                         使用期限: {{goodsDeta.coupon_start_time | dateFormat }} 
                     - {{goodsDeta.coupon_end_time | dateFormat }}</view>
                 </view>
-                <view class="button">立即领取</view>
+                <view class="button" @click="buy">立即领取</view>
             </view>
             <view class="description"></view>
         </view>
@@ -67,14 +68,12 @@
             <view class="shop-tet">
                 <view class="t1" >
                     <text class="name">{{shop.mall_name}}</text>
-                    <text class="go">进店逛逛</text>
-                    <text class="all" @click="navToShop(shop.mall_id)">全部商品</text>
+                    <text class="all" @click="navToShop(shop.mall_id)">进店逛逛</text>
                 </view>
                 <view class="zs">在售优惠商品<text class="num">{{shop.goods_detail_vo_list.length}}</text>件</view>
             </view>
         </view>
-        <view class="shop-score">
-            
+        <view class="shop-score" v-if="shop">
             <view class="score"><text>宝贝描述:</text><text class="num"></text><text class="icon">{{goodsDeta.desc_txt}}</text></view>
             <view class="score">卖家服务:<text class="num"></text><text class="icon">{{goodsDeta.serv_txt}}</text></view>
             <view class="score">物流服务:<text class="num"></text><text class="icon">{{goodsDeta.lgst_txt}}</text></view>
@@ -112,10 +111,7 @@
 			<view class="d-header">
 				<text>商品详情</text>
 			</view>
-			<view>
-                {{goodsDeta.goods_desc}}
-            </view>
-            <!-- <rich-text :nodes="desc"></rich-text> -->
+            <rich-text :nodes="goodsDeta.goods_desc"></rich-text>
 		</view>
 		
 		<view class="detail-tj" v-show="false">
@@ -134,7 +130,7 @@
                 	<view class="text">
                         <text class="title clamp">{{item.title}}</text>
                         <view class="price-box">
-                        	<price class="tex"><price class="price">{{item.price}}</price></price>
+                        	<text class="tex"><text class="price">{{item.price}}</text></text>
                         </view>
                         <view class="ticket">
                             <text class="tt">
@@ -163,10 +159,11 @@
 				<text>收藏</text>
 			</view>
 			
-			<view class="action-btn-group">
+			<!-- <view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn fx" @click="share">分享</button>
 				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即抢券</button>
-			</view>
+			</view> -->
+			<button class="action-btn-group2"  @click="buy">立即抢券</button>
 		</view>
 		
 		<!-- 分享 -->
@@ -227,7 +224,6 @@
 				this.opt_ids = res.goods_detail_response.goods_details[0].opt_ids;
 				this.getShopDeta()
 				this.getOtp()
-				console.log( this.shopId)
 			});
             // uni.request({
             //     url: this.websiteUrl+`/app_goods/detail`, 
@@ -370,7 +366,7 @@
                     background-color:rgb(255,37,75) ;
                     color: #fff;
                     margin: 0 10upx;
-                    font-size: 16upx;
+                    font-size: 24upx;
                     text-align: center;
                     flex: 1;
                     border-radius: 20upx;
@@ -405,15 +401,14 @@
             align-items: center;
             flex: 1;
             text-align: center;
-            .num{
-                padding: 0 3upx;
-            }
             .icon{
                 font-size: 18upx;
                 line-height: 24upx;
-                background-color: rgb(240,240,240);
+                background-color: #ffecee;
                 padding: 3upx;
                 margin-left: 5upx;
+				padding: 2upx 6upx;
+				color: $uni-color-primary;
             }
         }
     }
@@ -482,6 +477,8 @@
              }
             .button{
                 width: 200upx;
+				text-align: center;
+				font-size: 30upx;
             }
         }
         .description{
@@ -731,8 +728,10 @@
 	.detail-desc{
 		background: #fff;
 		margin-top: 16upx;
-        padding-bottom: 20upx;
-        font-size: 24upx;
+		padding: 0 30upx;
+        padding-bottom: 40upx;
+        font-size: 28upx;
+		line-height: 44upx;
 		.d-header{
 			display: flex;
 			justify-content: center;
@@ -992,6 +991,19 @@
                 color: #fff;
             }
 		}
+		.action-btn-group2{
+		    flex: 5;
+		    margin: 0 10upx;
+			display: flex;
+			height: 76upx;
+			border-radius: 100px;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			overflow: hidden;
+		    background-color: $uni-color-primary;
+			position:relative;
+		}
 	}
         
     .detail-tj{
@@ -1134,7 +1146,7 @@
         }
         .ticket{
             font-size: 22upx;
-            height: 24upx;
+            height: 29upx;
             line-height: 22upx;
             color: #fff;
             display: flex;
@@ -1146,21 +1158,24 @@
             }
             .icon{
                 float: left;
-                height: 20upx;
+                height: 25upx;
+				line-height: 25upx;
                 font-size: 14upx;
                 background-color: #fff;
                 color: rgb(255,105,96);;
                 margin: 2upx 2upx;
-                border-radius: 4upx;
-                width: 20upx;
+                border-radius: 2upx;
+                width: 30upx;
                 padding: 0 3upx;
             }
             .num{
                 line-height: 24upx;
-                height: 24upx;
+                height: 25upx;
+				line-height: 25upx;
                 font-size: 18upx;
                 padding: 0upx 2upx;
                 border-radius: 1upx;
+				padding: 0 4upx;
             }
         }
     	.floor-list{

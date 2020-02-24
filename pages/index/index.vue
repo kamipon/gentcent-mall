@@ -2,7 +2,11 @@
 	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<view class="mp-search-box"><input class="ser-input" type="text" value="输入关键字搜索" disabled /></view>
+		<view style="height: 70upx;"></view>
+		<view @tap="navToSearch()" class="mp-search-box">
+			<input class="ser-input" type="text" value="复制标题 搜拼多多优惠券" disabled />
+			<image src="../../static/zy-search/search.svg" mode="aspectFit" class="search-icon"></image>
+		</view>
 		<!-- #endif -->
 
 		<!-- 头部轮播 -->
@@ -122,7 +126,7 @@
 
 		<view class="guess-section">
 			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="navToDetailPage(item)">
-				<view class="image-wrapper"><image :src="item.goodsThumbnailUrl" mode="aspectFill"></image></view>
+				<view class="image-wrapper"><image :src="item.goodsThumbnailUrl" mode="aspectFill" lazy-load fade-show></image></view>
 				<text class="title clamp2">{{ item.goodsName }}</text>
 				<text class="price">
 					￥{{ ((item.minGroupPrice - item.couponDiscount) / 100) | toFiexd }}
@@ -210,7 +214,7 @@ export default {
 			});
 		},
 		loadCarousel() {
-			this.$_get('app_index/theme/list', {}).then(res => {
+			this.$_get('app_index/theme/list', {},{loading:false}).then(res => {
 				res.data.forEach(item => {
 					this.carouselList.push({
 						background: 'rgb(203, 87, 60)',
@@ -223,7 +227,7 @@ export default {
 			});
 		},
 		loadChanneGoods() {
-			this.$_get('app_index/goods/channel', {}).then(res => {
+			this.$_get('app_index/goods/channel', {},{loading:false}).then(res => {
 				console.log(res);
 				this.channelGoodsList_1 = res.list1;
 				this.channelGoodsList_2 = res.list2;
@@ -235,7 +239,7 @@ export default {
 		 */
 		loadData() {
 			let pageSize = 40;
-			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize }).then(res => {
+			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize },{loading:false}).then(res => {
 				console.log(res);
 				this.pageIndex++;
 				if (Math.round(res.data.goodsSearchResponse.totalCount / pageSize) <= this.pageIndex) {
@@ -272,6 +276,11 @@ export default {
 				scrollTop: 0,
 				duration: 300
 			});
+		},
+		navToSearch(){
+			uni.navigateTo({
+				url: `/pages/search/search`
+			});
 		}
 	},
 	onReady() {
@@ -284,9 +293,7 @@ export default {
 	// #ifndef MP
 	// 标题栏input搜索框点击
 	onNavigationBarSearchInputClicked: async function(e) {
-		uni.navigateTo({
-			url: `/pages/search/search`
-		});
+		this.navToSearch();
 	}
 	// #endif
 };
@@ -295,21 +302,33 @@ export default {
 <style lang="scss">
 /* #ifdef MP */
 .mp-search-box {
-	position: absolute;
+	position: fixed;
 	left: 0;
-	top: 30upx;
+	top: 0;
+	background-color: #FFF;
 	z-index: 9999;
 	width: 100%;
-	padding: 0 80upx;
+	padding: 0 20upx 15upx 20upx;
+	color: rgb(0, 0, 0);
 	.ser-input {
 		flex: 1;
 		height: 56upx;
 		line-height: 56upx;
 		text-align: center;
 		font-size: 28upx;
-		color: $font-color-base;
+		color: rgb(96, 98, 102);
+		background-color: #FFF;
 		border-radius: 20px;
-		background: rgba(255, 255, 255, 0.6);
+		background-color: rgba(231, 231, 231, 0.7);
+	}
+	.search-icon{
+		width: 40upx;
+		height: 40upx;
+		padding: 2upx 2upx 2upx 0;
+		position: absolute;
+		left: 50upx;
+		top: 7upx;
+		z-index: 10;
 	}
 }
 page {
@@ -419,7 +438,6 @@ page {
 	flex-wrap: wrap;
 	padding: 20upx 22upx;
 	background: #fff;
-	z-index: 999;
 	position: relative;
 	.cate-item {
 		display: flex;
@@ -514,7 +532,7 @@ page {
 	}
 	.floor-list {
 		white-space: nowrap;
-		padding: 20upx;
+		padding: 20upx 10upx;
 		border-radius: 6upx;
 		margin-top: -80upx;
 		box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);

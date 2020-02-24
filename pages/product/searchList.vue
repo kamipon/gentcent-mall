@@ -35,7 +35,7 @@
 		    	@click="navToDetailPage(item)"
 		    >
 		    	<view class="image-wrapper">
-		    		<img :src="item.goods_image_url" mode="aspectFill"></img>
+					<image :src="item.goods_image_url" mode="aspectFill"></image>
 		    	</view>
 		        <view class="date">
 		            
@@ -146,7 +146,7 @@
                     {keyword: this.keyword,
                     pageIndex:this.pageIndex,
                     catId : this.catId,
-                    sortType : this.sortType}).then(res => {
+                    sortType : this.sortType},{loading:false}).then(res => {
                     this.pageIndex+=1;
                     //获取数据
                     let goodsList = res.goods_search_response.goods_list;
@@ -255,6 +255,7 @@
         height: 60upx;
         background: #fff;
         padding: 10upx 20upx;
+		z-index: 99;
         .search{
             margin-left: 10upx;
             input{
@@ -281,8 +282,7 @@
 	.navbar{
 		position: fixed;
 		left: 0;
-		top: 180upx;
-        top: calc(var(--window-top) + env(safe-area-inset-top) + 60upx);
+        top: calc(var(--window-top) + 60upx);
 		display: flex;
 		width: 100%;
 		height: 80upx;
@@ -467,9 +467,10 @@
             border-bottom:1upx solid rgb(244,244,244);
             .image-wrapper{
                 width: 250upx;
-                img{
+                image{
                     width: 250upx; 
                     height: 250upx;
+					opacity: 1;
                 }
             }
             .date{

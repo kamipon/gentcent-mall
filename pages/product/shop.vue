@@ -8,7 +8,7 @@
 		        <view class="t1" >
 		            <text class="name">{{shop.mall_name}}</text>
 		        </view>
-		        <view class="zs">天猫logo</view>
+				<view class="zs">在售优惠商品<text class="num">{{shop.goods_detail_vo_list.length}}</text>件</view>
 		    </view>
 		</view>
 		<view class="shop-score">
@@ -25,7 +25,7 @@
             	@click="navToDetailPage(item.goods_id)"
             >
             	<view class="image-wrapper">
-            		<img :src="item.goods_thumbnail_url" mode="aspectFill"></img>
+            		<image :src="item.goods_thumbnail_url" mode="aspectFill"></image>
             	</view>
                 <view class="date">
                     
@@ -222,10 +222,11 @@
             .image-wrapper{
                 width: 250upx;
                 border-radius:10upx ;
-                img{
+                image{
                     width: 250upx; 
                     height: 250upx;
                     border-radius:10upx ; 
+					opacity: 1;
                 }
             }
             .date{
@@ -420,15 +421,14 @@
 	        align-items: center;
 	        flex: 1;
 	        text-align: center;
-	        .num{
-	            padding: 0 3upx;
-	        }
 	        .icon{
 	            font-size: 18upx;
 	            line-height: 24upx;
-	            background-color: rgb(240,240,240);
+	            background-color: #ffecee;
 	            padding: 3upx;
 	            margin-left: 5upx;
+				padding: 2upx 6upx;
+				color: $uni-color-primary;
 	        }
 	    }
 	}

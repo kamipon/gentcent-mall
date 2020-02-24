@@ -1,5 +1,12 @@
 <template>
 	<view class="content">
+		<!-- 小程序头部兼容 -->
+		<!-- #ifdef MP -->
+		<view @tap="navToSearch()" class="mp-search-box">
+			<input class="ser-input" type="text" value="复制标题 搜拼多多优惠券" disabled />
+			<image src="../../static/zy-search/search.svg" mode="aspectFit" class="search-icon"></image>
+		</view>
+		<!-- #endif -->
 		<scroll-view scroll-y class="left-aside">
 			<view v-for="(item,index) in cats" :key="item.cat_id" class="f-item b-b" :class="{active: index === current}" @click="tabtap(item,index)">
 				{{item.cat_name}}
@@ -35,14 +42,14 @@
 		},
 		onLoad(){
 			this.loadData();
-            this.$_get("app_goods/cats",{}).then(res => {//获取一级目录
+            this.$_get("app_goods/cats",{},{loading:false}).then(res => {//获取一级目录
                 let list = res.goods_cats_get_response.goods_cats_list;
                 list.forEach(item=>{
                     item.slist = [];
                     this.cats.push(item);
                     
                 })
-                this.$_get("app_goods/cats",{id:this.cats[0].cat_id}).then(res => {//获取二级目录\
+                this.$_get("app_goods/cats",{id:this.cats[0].cat_id},{loading:false}).then(res => {//获取二级目录\
                     let slist = res.goods_cats_get_response.goods_cats_list;
                     this.cats[0].slist = slist;
                 });
@@ -79,7 +86,7 @@
 				this.current = index;
 			},
 			change(e){
-                this.$_get("app_goods/cats",{id:this.cats[e.detail.current].cat_id}).then(res => {//获取二级目录
+                this.$_get("app_goods/cats",{id:this.cats[e.detail.current].cat_id},{loading:false}).then(res => {//获取二级目录
                     console.log(res.goods_cats_get_response.goods_cats_list)
                     let slist = res.goods_cats_get_response.goods_cats_list;
                     this.cats[e.detail.current].slist = slist;
@@ -91,6 +98,11 @@
 				uni.navigateTo({
                 	url: `/pages/product/searchList?catId=${e}`
 				})
+			},
+			navToSearch(){
+				uni.navigateTo({
+					url: `/pages/search/search`
+				});
 			}
 		},
 		// #ifndef MP
@@ -110,6 +122,38 @@
 		height: 100%;
 		background-color: #fff;
 	}
+	/* #ifdef MP */
+	.mp-search-box {
+		position: fixed;
+		left: 0;
+		top: 0;
+		background-color: #FFF;
+		z-index: 9999;
+		width: 100%;
+		padding: 0 20upx 15upx 20upx;
+		color: rgb(0, 0, 0);
+		.ser-input {
+			flex: 1;
+			height: 56upx;
+			line-height: 56upx;
+			text-align: center;
+			font-size: 28upx;
+			color: rgb(96, 98, 102);
+			background-color: #FFF;
+			border-radius: 20px;
+			background-color: rgba(231, 231, 231, 0.7);
+		}
+		.search-icon{
+			width: 40upx;
+			height: 40upx;
+			padding: 2upx 2upx 2upx 0;
+			position: absolute;
+			left: 50upx;
+			top: 7upx;
+			z-index: 10;
+		}
+	}
+	/* #endif */
 
 	.content {
 		display: flex;
@@ -119,6 +163,9 @@
 		width: 250upx;
 		height: 100%;
 		background-color: #f8f8f8;
+		/* #ifdef MP */
+		padding-top: 70upx;
+		/* #endif */
 	}
 	.f-item {
 		display: flex;
@@ -159,6 +206,9 @@
 		overflow: hidden;
 		padding-left: 20upx;
 		min-height: 100%;
+		/* #ifdef MP */
+		padding-top: 70upx;
+		/* #endif */
 	}
 	.s-item{
 		display: flex;

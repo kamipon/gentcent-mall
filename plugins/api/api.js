@@ -1,11 +1,12 @@
 import store from '../../store'
 
-// let preUtl = "http://pdd.chaoniuma.cn/";
-let preUtl = "http://192.168.50.158/";
+let preUtl = "http://pdd.chaoniuma.cn/";
+// let preUtl = "http://192.168.50.158/";
 
 export default {
 	$_get(url, data = {}, option = {
-		auth: false
+		auth: false,
+		loading: true
 	}) {
 		if (option.auth) {
 			if (store.state.hasLogin) {
@@ -17,16 +18,22 @@ export default {
 				return new Promise(resolve => resolve())
 			}
 		}
+		if (option.loading) {
+			uni.showLoading({
+				title: '正在加载'
+			})
+		}
 		return new Promise((resolve, reject) => {
 			uni.request({
 				url: preUtl + url,
 				data,
 				method: "GET"
 			}).then(data => {
+				uni.hideLoading();
 				var [error, res] = data;
-				if(!res){
+				if (!res) {
 					console.log(error);
-				}else{
+				} else {
 					resolve(res.data);
 				}
 			})
@@ -34,7 +41,8 @@ export default {
 
 	},
 	$_post(url, data = {}, option = {
-		auth: false
+		auth: false,
+		loading: true
 	}) {
 		if (option.auth) {
 			if (store.state.hasLogin) {
@@ -45,6 +53,11 @@ export default {
 				});
 				return new Promise(resolve => resolve())
 			}
+		}
+		if (option.loading) {
+			uni.showLoading({
+				title: '正在加载'
+			})
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
@@ -55,10 +68,11 @@ export default {
 					'content-type': 'application/x-www-form-urlencoded'
 				},
 			}).then(data => {
+				uni.hideLoading();
 				var [error, res] = data;
-				if(!res){
+				if (!res) {
 					console.log(error);
-				}else{
+				} else {
 					resolve(res.data);
 				}
 			})
