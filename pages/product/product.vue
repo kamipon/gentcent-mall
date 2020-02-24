@@ -279,7 +279,7 @@
 			},
 			buy(){
                 uni.showModal({
-                    content: `确定需要使用${this.goodsDeta.coupon_discount/100}点券创建订单吗?`,
+                    content: `确定需要使用${this.goodsDeta.coupon_discount}点券创建订单吗?`,
                     success: (e)=>{
                         if(e.confirm){
                             this.$_get("app_coupon/generate",{
