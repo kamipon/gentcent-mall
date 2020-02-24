@@ -19,6 +19,7 @@
 				<text class=""></text>
 				<text class="price-tip">券后价 ¥ </text>
 				<text class="price">{{goodsDeta.min_group_price-goodsDeta.coupon_discount | price }}</text>
+                
 				
                 <!-- <view class="rewards" >预估积分:+9909</view> -->
 				
@@ -28,6 +29,7 @@
             </view>
 			<text class="title">{{goodsDeta.goods_name}}</text>
 			<view class="bot-row">
+				
 				<text class="sales">已售 <text class="num red">{{goodsDeta.sales_tip}}</text> 件</text>
 			</view>
 		</view>
@@ -39,6 +41,7 @@
                         使用期限: {{goodsDeta.coupon_start_time | dateFormat }} 
                     - {{goodsDeta.coupon_end_time | dateFormat }}</view>
                 </view>
+                
                 <view class="button" @click="buy">立即领取</view>
             </view>
             <view class="description"></view>
@@ -68,11 +71,13 @@
             <view class="shop-tet">
                 <view class="t1" >
                     <text class="name">{{shop.mall_name}}</text>
+                    
                     <text class="all" @click="navToShop(shop.mall_id)">进店逛逛</text>
                 </view>
                 <view class="zs">在售优惠商品<text class="num">{{shop.goods_detail_vo_list.length}}</text>件</view>
             </view>
         </view>
+        
         <view class="shop-score" v-if="shop">
             <view class="score"><text>宝贝描述:</text><text class="num"></text><text class="icon">{{goodsDeta.desc_txt}}</text></view>
             <view class="score">卖家服务:<text class="num"></text><text class="icon">{{goodsDeta.serv_txt}}</text></view>
@@ -111,6 +116,7 @@
 			<view class="d-header">
 				<text>商品详情</text>
 			</view>
+			
             <rich-text :nodes="goodsDeta.goods_desc"></rich-text>
 		</view>
 		
@@ -130,6 +136,7 @@
                 	<view class="text">
                         <text class="title clamp">{{item.title}}</text>
                         <view class="price-box">
+                        	
                         	<text class="tex"><text class="price">{{item.price}}</text></text>
                         </view>
                         <view class="ticket">
@@ -159,9 +166,11 @@
 				<text>收藏</text>
 			</view>
 			
+			
 			<!-- <view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn fx" @click="share">分享</button>
-				<button type="primary" class=" action-btn no-border buy-now-btn gm" @click="buy">立即抢券</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn gm"
+                 @click="buy">￥{{(goodsDeta.coupon_discount)| price}} 领券</button>
 			</view> -->
 			<button class="action-btn-group2"  @click="buy">立即抢券</button>
 		</view>
@@ -224,6 +233,7 @@
 				this.opt_ids = res.goods_detail_response.goods_details[0].opt_ids;
 				this.getShopDeta()
 				this.getOtp()
+				
 			});
             // uni.request({
             //     url: this.websiteUrl+`/app_goods/detail`, 
@@ -273,13 +283,28 @@
 				this.favorite = !this.favorite;
 			},
 			buy(){
-                this.$_get("app_goods/generate",{id: this.goodsDeta.goods_id},{auth: true}).then(res => {
-                    this.$store.state.webviewSrc = res.goods_promotion_url_generate_response.goods_promotion_url_list[0].mobile_short_url;
-                    uni.navigateTo({
-                        url: `/pages/webview/webview`
-
-                    })
-                })
+                uni.showModal({
+                    content: `确定需要使用${this.goodsDeta.coupon_discount}点券创建订单吗?`,
+                    success: (e)=>{
+                        if(e.confirm){
+                            this.$_get("app_coupon/generate",{
+                                id: this.goodsDeta.goods_id,
+                                money: this.goodsDeta.coupon_discount,
+                                name: this.goodsDeta.goods_name
+                                },{auth: true}).then(res => {
+                                    if(res.flag){
+                                        this.$store.state.webviewSrc =res.coupon.webUrl ;
+                                        uni.navigateTo({
+                                            url: `/pages/webview/webview`
+                                        })
+                                    }else{
+                                        alert(res.msg)
+                                    }
+                            })
+                        }
+                    }
+                });
+                
 			},
 			stopPrevent(){}
 		},
@@ -728,6 +753,7 @@
 	.detail-desc{
 		background: #fff;
 		margin-top: 16upx;
+
 		padding: 0 30upx;
         padding-bottom: 40upx;
         font-size: 28upx;
@@ -1146,6 +1172,7 @@
         }
         .ticket{
             font-size: 22upx;
+            
             height: 29upx;
             line-height: 22upx;
             color: #fff;
@@ -1158,18 +1185,21 @@
             }
             .icon{
                 float: left;
+                
                 height: 25upx;
 				line-height: 25upx;
                 font-size: 14upx;
                 background-color: #fff;
                 color: rgb(255,105,96);;
                 margin: 2upx 2upx;
+               
                 border-radius: 2upx;
                 width: 30upx;
                 padding: 0 3upx;
             }
             .num{
                 line-height: 24upx;
+                
                 height: 25upx;
 				line-height: 25upx;
                 font-size: 18upx;
