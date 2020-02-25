@@ -7,6 +7,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
+		shotId: "",
 		token: "",
 		userInfo: {},
 		webviewSrc: ""
@@ -28,9 +29,12 @@ const store = new Vuex.Store({
 			uni.removeStorage({
 				key: 'token'
 			})
-		}
+		},
 	},
 	actions: {
+        setShotId({state,commit,dispatch},v){
+            state.shotId=v
+        },
 		login({state,commit,dispatch}, provider={phone:'',password:''}) {
 			return new Promise((resolve,reject) => {
 				api.$_post('app_member/login', provider).then(res => {
@@ -68,7 +72,7 @@ const store = new Vuex.Store({
 				});
 			});
 		},
-		register({state,commit,dispatch}, provider={phone:'',password:'',invcode:'',authcode:''}) {
+		register({state,commit,dispatch}, provider={phone:'',invcode:'',authcode:''}) {
 			return new Promise((resolve,reject) => {
 				api.$_post('app_member/register', provider).then(res => {
 					if(res.errcode==200){
