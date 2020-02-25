@@ -10,40 +10,13 @@
 				欢迎回来！
 			</view>
 			<view class="input-content">
-				<view class="input-item">
-					<text class="tit">手机号码</text>
-					<input 
-						type="number" 
-						:value="phone" 
-						placeholder="请输入手机号码"
-						maxlength="11"
-						data-key="phone"
-						@input="inputChange"
-					/>
-				</view>
-				<view class="input-item">
-					<text class="tit">密码</text>
-					<input 
-						type="mobile" 
-						:value="password" 
-						placeholder="请输入密码"
-						placeholder-class="input-empty"
-						maxlength="20"
-						password 
-						data-key="password"
-						@input="inputChange"
-						@confirm="toLogin"
-					/>
-				</view>
+				
 			</view>
-			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-			<view class="forget-section">
-				验证码登录
+			<button class="confirm-btn" @click="wxLogin" 
+            :disabled="logining">微信一键登录</button>
+			<view class="forget-section" @click="toRegist">
+				使用手机号登录
 			</view>
-		</view>
-		<view class="register-section">
-			还没有账号?
-			<text @click="toRegist">马上注册</text>
 		</view>
 	</view>
 </template>
@@ -205,8 +178,8 @@
 		height: 76upx;
 		line-height: 76upx;
 		border-radius: 50px;
-		margin-top: 70upx;
-		background: $uni-color-primary;
+		margin-top: 120upx;
+        background: rgb(90, 200,80);
 		color: #fff;
 		font-size: $font-lg;
 		&:after{
