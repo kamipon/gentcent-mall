@@ -20,7 +20,6 @@
     import uQRCode from '@/js/uqrcode.js' //二维码
     import h5Copy  from '@/js/junyi-h5-copy.js' //控制剪切板
 	export default {
-        // #endif
         computed: {
         	...mapState(['hasLogin','userInfo'])
         },
@@ -35,14 +34,16 @@
             if(shotId){//被推广过来的
                 if(this.hasLogin){
                     //登录的去首页
-                    uni.navigateTo({
+                    uni.switchTab({
                     	url: '/pages/index/index'
                     })
                 }else{
                     //设置  shotId
-                    this.setShotId(shotId)
-                    uni.navigateTo({
-                    	url: '/pages/public/login'
+                    uni.redirectTo({
+                    	url: '/pages/public/login',
+						success: () => {
+							this.setShotId(shotId)
+						}
                     })
                 }
             }

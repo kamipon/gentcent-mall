@@ -5,7 +5,7 @@
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">REGISTER</view>
+			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">登录</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -39,7 +39,7 @@
                     
                 </view>
                 <view class="uni-modal__bd">
-                    <input  :value="invcode" focus="true"   placeholder="请输入邀请码"/>
+                    <input  :value="invcode" focus="true"   placeholder="请输入邀请码" @input="input"/>
                 </view>
                 <view class="uni-modal__ft">
                     <view class="uni-modal__btn uni-modal__btn_default" @click="promptVisible=false">取消</view>
@@ -75,6 +75,9 @@ export default {
 	onLoad() {
     },
 	methods: {
+		input(e){
+			this.invcode = e.detail.value;
+		},
 		...mapActions(['register','login']),
 		inputChange(e) {
 			const key = e.currentTarget.dataset.key;
@@ -123,14 +126,14 @@ export default {
             }else{//输入验证码 注册
                 if(this.shotId!=null&& this.shotId != ""){
                     this.invcode = this.shotId;
-                    this.toRegister();
+                    this.toRegister(true);
                 }else{
                     this.promptVisible = true
                 }
                
             }
 		},
-        toRegister(){
+        toRegister(navToHome=false){
             this.logining = true;
             this.register({phone: this.phone,invcode: this.invcode,
             authcode: this.authcode})
@@ -138,9 +141,13 @@ export default {
                 this.logining = false;
                 this.$api.msg('注册成功');
                 setTimeout(()=>{
-                    uni.redirectTo({
-                        url: '/pages/public/login'
-                    });
+					if(navToHome){
+						uni.switchTab({
+							url:"/pages/index/index"
+						})
+					}else{
+						uni.navigateBack();
+					}
                 }, 200)
             }).catch(res=>{
                 this.logining = false;
