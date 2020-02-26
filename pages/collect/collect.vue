@@ -19,61 +19,23 @@
 					<view
 						class="cart-item" 
 						:class="{'b-b': index!==cartList.length-1}"
+                        @touchstart="gotouchstart(index)"
+                        @touchmove="gotouchmove"
+                        @touchend="gotouchend"
 					>
-						<view class="image-wrapper">
-							<image :src="item.image" 
-								:class="[item.loaded]"
-								mode="aspectFill" 
-								lazy-load 
-								@load="onImageLoad('cartList', index)" 
-								@error="onImageError('cartList', index)"
+						
+						<view class="img" @click="navTo('/pages/product/product?id='+item.goods_id)">
+							<image :src="item.goods_pic" 
 							></image>
-							<view 
-								class="yticon icon-xuanzhong2 checkbox"
-								:class="{checked: item.checked}"
-								@click="check('item', index)"
-							></view>
 						</view>
 						<view class="item-right">
-							<text class="clamp title">{{item.title}}</text>
-							<text class="attr">{{item.attr_val}}</text>
-							<text class="price">¥{{item.price}}</text>
-							<uni-number-box 
-								class="step"
-								:min="1" 
-								:max="item.stock"
-								:value="item.number>item.stock?item.stock:item.number"
-								:isMax="item.number>=item.stock?true:false"
-								:isMin="item.number===1"
-								:index="index"
-								@eventChange="numberChange"
-							></uni-number-box>
+							<text class=" title" @click="navTo('/pages/product/product?id='+item.goods_id)">{{item.goods_name}}</text>
+							<text class="attr">¥{{item.min_normal_price}}</text>
+							<text class="price">¥{{item.min_group_price}}</text>
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
 					</view>
 				</block>
-			</view>
-			<!-- 底部菜单栏 -->
-			<view class="action-section">
-				<view class="checkbox">
-					<image 
-						:src="allChecked?'/static/selected.png':'/static/select.png'" 
-						mode="aspectFit"
-						@click="check('all')"
-					></image>
-					<view class="clear-btn" :class="{show: allChecked}" @click="clearCart">
-						清空
-					</view>
-				</view>
-				<view class="total-box">
-					<text class="price">¥{{total}}</text>
-					<text class="coupon">
-						已优惠
-						<text>74.35</text>
-						元
-					</text>
-				</view>
-				<button type="primary" class="no-border confirm-btn" @click="createOrder">去结算</button>
 			</view>
 		</view>
 	</view>
@@ -94,11 +56,14 @@
 				allChecked: false, //全选状态  true|false
 				empty: false, //空白页现实  true|false
 				cartList: [],
+                timeOutEvent : 0,//长按定时器
 			};
 		},
 		onLoad(){
-			this.loadData();
 		},
+        onShow() {
+            this.loadData();
+        },
 		watch:{
 			//显示空白页
 			cartList(e){
@@ -106,21 +71,29 @@
 				if(this.empty !== empty){
 					this.empty = empty;
 				}
-			}
+			},
+            hasLogin(val, oldVal) {
+                this.loadData();
+            }
 		},
 		computed:{
 			...mapState(['hasLogin'])
 		},
 		methods: {
+            navTo(url){
+            	uni.navigateTo({  
+            		url
+            	})  
+            }, 
 			//请求数据
-			async loadData(){
-				let list = await this.$api.json('cartList'); 
-				let cartList = list.map(item=>{
-					item.checked = true;
-					return item;
-				});
-				this.cartList = cartList;
-				this.calcTotal();  //计算总价
+			loadData(){
+                if(this.hasLogin){
+                    this.$_get("app_favorites/list",{},{auth: true,loading: true}).then(res => {
+                        console.log(res)
+                        this.cartList = res.goods_basic_detail_response.goods_list;;
+                        console.log(this.cartList)
+                    })
+                }
 			},
 			//监听image加载完成
 			onImageLoad(key, index) {
@@ -135,85 +108,48 @@
 					url: '/pages/public/login'
 				})
 			},
-			 //选中状态处理
-			check(type, index){
-				if(type === 'item'){
-					this.cartList[index].checked = !this.cartList[index].checked;
-				}else{
-					const checked = !this.allChecked
-					const list = this.cartList;
-					list.forEach(item=>{
-						item.checked = checked;
-					})
-					this.allChecked = checked;
-				}
-				this.calcTotal(type);
-			},
-			//数量
-			numberChange(data){
-				this.cartList[data.index].number = data.number;
-				this.calcTotal();
-			},
+            gotouchstart(index){
+               
+               let that = this;
+               clearTimeout(this.timeOutEvent);//清除定时器
+               this.timeOutEvent = 0;
+               this.timeOutEvent = setTimeout(()=>{
+                    //执行长按要执行的内容，
+                    this.deleteCartItem(index);
+                 },600);//这里设置定时
+             },
+                  //手释放，如果在500毫秒内就释放，则取消长按事件，此时可以执行onclick应该执行的事件
+            gotouchend(){
+                clearTimeout(this.timeOutEvent);
+                  if(this.timeOutEvent!=0){
+                    //这里写要执行的内容（尤如onclick事件）
+                 }
+            },
+            //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按 
+            gotouchmove(){
+                 clearTimeout(this.timeOutEvent);//清除定时器
+                 this.timeOutEvent = 0;
+            },
 			//删除
 			deleteCartItem(index){
-				let list = this.cartList;
-				let row = list[index];
-				let id = row.id;
-
-				this.cartList.splice(index, 1);
-				this.calcTotal();
-				uni.hideLoading();
+                uni.showModal({
+                    title: '提示',
+                    content: '确认删除改商品吗?',
+                    success:  (res)=> {
+                        if (res.confirm) {
+                            let list = this.cartList;
+                            let row = list[index];
+                            let id = row.goods_id;
+                            this.$_get("app_favorites/remove",{id: id},{auth: true}).then(res => {
+                            })
+                            this.cartList.splice(index, 1);
+                            uni.hideLoading();
+                        } else if (res.cancel) {
+                        }
+                    }
+                });
+				
 			},
-			//清空
-			clearCart(){
-				uni.showModal({
-					content: '清空购物车？',
-					success: (e)=>{
-						if(e.confirm){
-							this.cartList = [];
-						}
-					}
-				})
-			},
-			//计算总价
-			calcTotal(){
-				let list = this.cartList;
-				if(list.length === 0){
-					this.empty = true;
-					return;
-				}
-				let total = 0;
-				let checked = true;
-				list.forEach(item=>{
-					if(item.checked === true){
-						total += item.price * item.number;
-					}else if(checked === true){
-						checked = false;
-					}
-				})
-				this.allChecked = checked;
-				this.total = Number(total.toFixed(2));
-			},
-			//创建订单
-			createOrder(){
-				let list = this.cartList;
-				let goodsData = [];
-				list.forEach(item=>{
-					if(item.checked){
-						goodsData.push({
-							attr_val: item.attr_val,
-							number: item.number
-						})
-					}
-				})
-
-				uni.navigateTo({
-					url: `/pages/order/createOrder?data=${JSON.stringify({
-						goodsData: goodsData
-					})}`
-				})
-				this.$api.msg('跳转下一页 sendData');
-			}
 		}
 	}
 </script>
@@ -255,15 +191,15 @@
 		display:flex;
 		position:relative;
 		padding:30upx 40upx;
-		.image-wrapper{
-			width: 230upx;
-			height: 230upx;
-			flex-shrink: 0;
-			position:relative;
+        .img{
+            width: 230upx;
+            height: 230upx;
 			image{
+                width: 100%;
+                height: 100%;
 				border-radius:8upx;
 			}
-		}
+        }
 		.checkbox{
 			position:absolute;
 			left:-16upx;
@@ -290,97 +226,33 @@
 				line-height: 40upx;
 			}
 			.attr{
+                margin-top: 50upx;
 				font-size: $font-sm + 2upx;
 				color: $font-color-light;
 				height: 50upx;
+                text-decoration: line-through;
 				line-height: 50upx;
 			}
 			.price{
 				height: 50upx;
 				line-height:50upx;
 			}
+            
+            .title{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+            	height: 80upx;
+                -webkit-box-orient: vertical;
+            }
 		}
 		.del-btn{
 			padding:4upx 10upx;
 			font-size:34upx; 
 			height: 50upx;
 			color: $font-color-light;
-		}
-	}
-	/* 底部栏 */
-	.action-section{
-		/* #ifdef H5 */
-		margin-bottom:100upx;
-		/* #endif */
-		position:fixed;
-		left: 30upx;
-		bottom:30upx;
-		z-index: 95;
-		display: flex;
-		align-items: center;
-		width: 690upx;
-		height: 100upx;
-		padding: 0 30upx;
-		background: rgba(255,255,255,.9);
-		box-shadow: 0 0 20upx 0 rgba(0,0,0,.5);
-		border-radius: 16upx;
-		.checkbox{
-			height:52upx;
-			position:relative;
-			image{
-				width: 52upx;
-				height: 100%;
-				position:relative;
-				z-index: 5;
-			}
-		}
-		.clear-btn{
-			position:absolute;
-			left: 26upx;
-			top: 0;
-			z-index: 4;
-			width: 0;
-			height: 52upx;
-			line-height: 52upx;
-			padding-left: 38upx;
-			font-size: $font-base;
-			color: #fff;
-			background: $font-color-disabled;
-			border-radius:0 50px 50px 0;
-			opacity: 0;
-			transition: .2s;
-			&.show{
-				opacity: 1;
-				width: 120upx;
-			}
-		}
-		.total-box{
-			flex: 1;
-			display:flex;
-			flex-direction: column;
-			text-align:right;
-			padding-right: 40upx;
-			.price{
-				font-size: $font-lg;
-				color: $font-color-dark;
-			}
-			.coupon{
-				font-size: $font-sm;
-				color: $font-color-light;
-				text{
-					color: $font-color-dark;
-				}
-			}
-		}
-		.confirm-btn{
-			padding: 0 38upx;
-			margin: 0;
-			border-radius: 100px;
-			height: 76upx;
-			line-height: 76upx;
-			font-size: $font-base + 2upx;
-			background: $uni-color-primary;
-			box-shadow: 1px 2px 5px rgba(217, 60, 93, 0.72)
 		}
 	}
 	/* 复选框选中状态 */

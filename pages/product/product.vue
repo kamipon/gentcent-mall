@@ -74,7 +74,7 @@
                     
                     <text class="all" @click="navToShop(shop.mall_id)">进店逛逛</text>
                 </view>
-                <view class="zs">在售优惠商品<text class="num">{{shop.goods_detail_vo_list.length}}</text>件</view>
+                <view class="zs">在售优惠商品<text class="num" v-if="shop.goods_detail_vo_list">{{shop.goods_detail_vo_list.length}}</text>件</view>
             </view>
         </view>
         
@@ -185,6 +185,9 @@
 </template>
 
 <script>
+	import {
+		mapState
+	} from 'vuex';
 	import share from '@/components/share';
 	export default{
 		components: {
@@ -194,7 +197,6 @@
 			return {
 				specClass: 'none',
 				specSelected:[],
-				
 				tjGoodsList: [{
 				    image: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553187020783&di=bac9dd78b36fd984502d404d231011c0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201609%2F26%2F20160926173213_s5adi.jpeg",
 				    image2: "http://pic.rmb.bdstatic.com/819a044daa66718c2c40a48c1ba971e6.jpeg",
@@ -204,7 +206,7 @@
 				    title: "古黛妃 短袖t恤女夏装2019新款韩版宽松"}],
                     
                 tjGoodsList2: [],
-				favorite: true,
+				favorite: false,
 				shareList: [],
 				desc: `
 					<div style="width:100%">
@@ -221,12 +223,13 @@
                 opt_ids:"",
 			};
 		},
-		async onLoad(options){
+		onLoad(options){
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			if(id){
 				//this.$api.msg(`点击了${id}`);
 			}
+            //获取商品详情
             this.$_get("app_goods/detail",{id: id}).then(res => {
 				this.goodsDeta=res.goods_detail_response.goods_details[0];
 				this.shopId = res.goods_detail_response.goods_details[0].mall_id;
@@ -235,6 +238,12 @@
 				this.getOtp()
 				
 			});
+            if(this.hasLogin){
+                this.$_get("app_favorites/getState",{id: id},{auth: true}).then(res => {
+                    console.log(res)
+                    this.favorite = res ;
+                });
+            }
             // uni.request({
             //     url: this.websiteUrl+`/app_goods/detail`, 
             //     data: {
@@ -250,7 +259,7 @@
             //     }
             // });
             //获取数据
-			this.shareList = await this.$api.json('shareList');
+			//this.shareList = await this.$api.json('shareList');
 		},
 		methods:{
             getShopDeta(){
@@ -281,29 +290,44 @@
 			//收藏
 			toFavorite(){
 				this.favorite = !this.favorite;
+                if(this.favorite){
+                    this.$_get("app_favorites/add",{id: this.goodsDeta.goods_id},{auth: true}).then(res => {
+                    })
+                }else{
+                    this.$_get("app_favorites/remove",{id: this.goodsDeta.goods_id},{auth: true}).then(res => {
+                    })
+                }
 			},
 			buy(){
-                uni.showModal({
-                    content: `确定需要使用${this.goodsDeta.coupon_discount}点券创建订单吗?`,
-                    success: (e)=>{
-                        if(e.confirm){
-                            this.$_get("app_coupon/generate",{
-                                id: this.goodsDeta.goods_id,
-                                money: this.goodsDeta.coupon_discount,
-                                name: this.goodsDeta.goods_name
-                                },{auth: true}).then(res => {
-                                    if(res.flag){
-                                        this.$store.state.webviewSrc =res.coupon.webUrl ;
-                                        uni.navigateTo({
-                                            url: `/pages/webview/webview`
-                                        })
-                                    }else{
-                                        alert(res.msg)
-                                    }
-                            })
+                
+                if(this.hasLogin){
+                    uni.showModal({
+                        content: `确定需要使用${this.goodsDeta.coupon_discount}点券创建订单吗?`,
+                        success: (e)=>{
+                            if(e.confirm){
+                                this.$_get("app_coupon/generate",{
+                                    id: this.goodsDeta.goods_id,
+                                    money: this.goodsDeta.coupon_discount,
+                                    name: this.goodsDeta.goods_name
+                                    },{auth: true}).then(res => {
+                                        if(res.flag){
+                                            this.$store.state.webviewSrc =res.coupon.webUrl ;
+                                            uni.navigateTo({
+                                                url: `/pages/webview/webview`
+                                            })
+                                        }else{
+                                            alert(res.msg)
+                                        }
+                                })
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    uni.navigateTo({
+                        url: '/pages/public/login'
+                    })
+                }
+                
                 
 			},
 			stopPrevent(){}
@@ -317,7 +341,8 @@
                     }
                }
                return list
-            }
+            },
+            ...mapState(['hasLogin','userInfo'])
         },
         filters:{
             price(val){
