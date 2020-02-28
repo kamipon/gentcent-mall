@@ -1,7 +1,11 @@
 import store from '../../store'
 
-let preUtl = "http://pdd.chaoniuma.cn/";
-// let preUtl = "http://192.168.50.158/";
+let preUrl;
+if (process.env.NODE_ENV === 'development') {
+	preUrl = "http://192.168.50.158/";
+} else {
+	preUrl = "http://pdd.chaoniuma.cn/";
+}
 
 export default {
 	$_get(url, data = {}, option = {
@@ -25,7 +29,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: preUtl + url,
+				url: preUrl + url,
 				data,
 				method: "GET"
 			}).then(data => {
@@ -61,7 +65,7 @@ export default {
 		}
 		return new Promise((resolve, reject) => {
 			uni.request({
-				url: preUtl + url,
+				url: preUrl + url,
 				data,
 				method: "POST",
 				header: {

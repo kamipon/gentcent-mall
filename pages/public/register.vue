@@ -56,7 +56,7 @@ import {mapState } from 'vuex';
 export default {
     
     computed: {
-    	...mapState(['shotId'])
+    	...mapState(['shotId','redId'])
     },
 	data() {
 		return {
@@ -78,7 +78,7 @@ export default {
 		input(e){
 			this.invcode = e.detail.value;
 		},
-		...mapActions(['register','login']),
+		...mapActions(['register','login','setShotId','loginAndBindPhone']),
 		inputChange(e) {
 			const key = e.currentTarget.dataset.key;
 			this[key] = e.detail.value;
@@ -107,6 +107,23 @@ export default {
           }
         },
 		tolR() {
+			if(this.redId!=null && this.redId != ""){
+				this.loginAndBindPhone({phone: this.phone,authcode: this.authcode,redId:this.redId}).then(res => {
+                    this.logining = false;
+                    this.$api.msg('登录成功');
+					this.$store.state.redId="";
+                    setTimeout(()=>{
+                        uni.reLaunch({
+                        	url:"/pages/index/index"
+                        });
+                    }, 200)
+                }).catch(res=>{
+                    this.logining = false;
+                    this.$api.msg(res.msg);
+                });
+				return;
+			}
+			
             if(!this.jsyzm){
 				this.$api.msg('请接接收证码!');
                 return;
@@ -133,7 +150,7 @@ export default {
                
             }
 		},
-        toRegister(navToHome=false){
+        toRegister(isShotId=false){
             this.logining = true;
             this.register({phone: this.phone,invcode: this.invcode,
             authcode: this.authcode})
@@ -141,7 +158,8 @@ export default {
                 this.logining = false;
                 this.$api.msg('注册成功');
                 setTimeout(()=>{
-					if(navToHome){
+					if(isShotId){
+						this.setShotId(null);
 						uni.switchTab({
 							url:"/pages/index/index"
 						})

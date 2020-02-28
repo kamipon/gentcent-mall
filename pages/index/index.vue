@@ -15,7 +15,7 @@
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
-			<swiper class="carousel" circular @change="swiperChange">
+			<swiper class="carousel" circular @change="swiperChange" autoplay>
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navCarouselList(item.id)"><image :src="item.src" /></swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -112,7 +112,7 @@
 				</view>
 			</scroll-view>
 		</view>
-		
+
 		<!-- 今日推荐 -->
 		<view class="f-header m-t">
 			<view class="tit-box">
@@ -149,6 +149,7 @@
 
 <script>
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+import { mapState, mapActions } from 'vuex';
 export default {
 	components: { uniLoadMore },
 	data() {
@@ -166,6 +167,9 @@ export default {
 			showScrollToTopBtn: false
 		};
 	},
+	computed: {
+		...mapState(['hasLogin', 'userInfo'])
+	},
 	filters: {
 		toFiexd(num, pre = 2) {
 			return parseFloat(num).toFixed(pre);
@@ -178,7 +182,13 @@ export default {
 			this.showScrollToTopBtn = false;
 		}
 	},
-	onLoad() {
+	onLoad({ redId }) {
+		this.$store.commit("setRedId",redId);
+		setTimeout(() => {
+			if (redId) {
+				this.loginWithRedId(redId);
+			}
+		}, 500);
 		this.loadData();
 		this.loadCarousel();
 		this.loadChanneGoods();
@@ -188,6 +198,7 @@ export default {
 		this.loadData();
 	},
 	methods: {
+		...mapActions(['loginWithRedId']),
 		navToList() {
 			uni.navigateTo({
 				url: `/pages/product/searchList`
@@ -214,7 +225,7 @@ export default {
 			});
 		},
 		loadCarousel() {
-			this.$_get('app_index/theme/list', {},{loading:false}).then(res => {
+			this.$_get('app_index/theme/list', {}, { loading: false }).then(res => {
 				res.data.forEach(item => {
 					this.carouselList.push({
 						background: 'rgb(203, 87, 60)',
@@ -227,7 +238,7 @@ export default {
 			});
 		},
 		loadChanneGoods() {
-			this.$_get('app_index/goods/channel', {},{loading:false}).then(res => {
+			this.$_get('app_index/goods/channel', {}, { loading: false }).then(res => {
 				console.log(res);
 				this.channelGoodsList_1 = res.list1;
 				this.channelGoodsList_2 = res.list2;
@@ -239,7 +250,7 @@ export default {
 		 */
 		loadData() {
 			let pageSize = 40;
-			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize },{loading:false}).then(res => {
+			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize }, { loading: false }).then(res => {
 				console.log(res);
 				this.pageIndex++;
 				if (Math.round(res.data.goodsSearchResponse.totalCount / pageSize) <= this.pageIndex) {
@@ -277,7 +288,7 @@ export default {
 				duration: 300
 			});
 		},
-		navToSearch(){
+		navToSearch() {
 			uni.navigateTo({
 				url: `/pages/search/search`
 			});
@@ -305,7 +316,7 @@ export default {
 	position: fixed;
 	left: 0;
 	top: 0;
-	background-color: #FFF;
+	background-color: #fff;
 	z-index: 9999;
 	width: 100%;
 	padding: 0 20upx 15upx 20upx;
@@ -317,11 +328,11 @@ export default {
 		text-align: center;
 		font-size: 28upx;
 		color: rgb(96, 98, 102);
-		background-color: #FFF;
+		background-color: #fff;
 		border-radius: 20px;
 		background-color: rgba(231, 231, 231, 0.7);
 	}
-	.search-icon{
+	.search-icon {
 		width: 40upx;
 		height: 40upx;
 		padding: 2upx 2upx 2upx 0;

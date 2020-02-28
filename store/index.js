@@ -10,9 +10,13 @@ const store = new Vuex.Store({
 		shotId: "",
 		token: "",
 		userInfo: {},
-		webviewSrc: ""
+		webviewSrc: "",
+		redId:""
 	},
 	mutations: {
+		setRedId(state,v){
+		    state.redId=v
+		},
 		login(state, provider) {
 			state.hasLogin = true;
 			state.userInfo = provider.member;
@@ -55,6 +59,46 @@ const store = new Vuex.Store({
 						resolve(res);
 					}else{
 						uni.removeStorage({key: "token"})
+						reject(res);
+					}
+				});
+			});
+		},
+		loginWithRedId({state,commit,dispatch}, redId) {
+			return new Promise((resolve,reject) => {
+				api.$_post('app_member/login_red', {redId},{loading:false}).then(res => {
+					if(res.errcode==200){
+						commit('login',{member:res.member,token:res.token});
+						resolve(res);
+					}else{
+						uni.showToast({icon:"none",title: res.msg});
+						uni.removeStorage({key: "token"});
+						if (res.errcode == 10008) {
+							uni.reLaunch({
+								url: "/pages/public/register",
+								success() {
+									commit("setRedId", redId);
+									uni.showToast({
+										icon: "none",
+										title: res.msg
+									});
+								}
+							})
+						}
+						reject(res);
+					}
+				});
+			});
+		},
+		loginAndBindPhone({state,commit,dispatch}, provider={phone:"",redId:"",authcode:""}) {
+			return new Promise((resolve,reject) => {
+				api.$_post('app_member/bind_phone', provider,{loading:false}).then(res => {
+					if(res.errcode==200){
+						commit('login',{member:res.member,token:res.token});
+						resolve(res);
+					}else{
+						uni.showToast({icon:"none",title: res.msg});
+						uni.removeStorage({key: "token"});
 						reject(res);
 					}
 				});
