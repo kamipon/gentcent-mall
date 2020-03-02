@@ -67,10 +67,14 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "",
+        "appid" : "wxabbd08f9d6260357",
         "setting" : {
-            "urlCheck" : true
-        }
+            "urlCheck" : false
+        },
+        "permission" : {},
+		"navigateToMiniProgramAppIdList" : [
+			"wx32540bd863b27570"
+		]
     }
 }
 /* 5+App特有相关 */

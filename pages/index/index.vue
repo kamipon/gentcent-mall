@@ -206,12 +206,28 @@ export default {
 		},
 		navZhuanPan() {
 			this.$_post('app_index/lottery/gen', {}, { auth: true }).then(res => {
-				this.navToWebview({ src: res.data[0].singleUrlList.url });
+				//#ifdef MP
+				uni.navigateToMiniProgram({
+					appId:res.data.weAppInfo.appId,
+					path:res.data.weAppInfo.pagePath
+				})
+				//#endif
+				//#ifndef MP
+				this.navToWebview({ src: res.data.singleUrlList.url });
+				//#endif
 			});
 		},
 		navResourceList(type) {
 			this.$_post('app_index/resource/gen', { type }, { auth: true }).then(res => {
-				this.navToWebview({ src: res.data.url });
+				//#ifdef MP
+				uni.navigateToMiniProgram({
+					appId:res.data.weAppInfo.appId,
+					path:res.data.weAppInfo.pagePath
+				})
+				//#endif
+				//#ifndef MP
+				this.navToWebview({ src: res.data.singleUrlList.url });
+				//#endif
 			});
 		},
 		navCarouselList(id) {
