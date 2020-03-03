@@ -90,7 +90,7 @@ const store = new Vuex.Store({
 				});
 			});
 		},
-		loginAndBindPhone({state,commit,dispatch}, provider={phone:"",redId:"",authcode:""}) {
+		loginAndBindPhone({state,commit,dispatch}, provider={phone:"",redId:"",authcode:"",wxMember:""}) {
 			return new Promise((resolve,reject) => {
 				api.$_post('app_member/bind_phone', provider,{loading:false}).then(res => {
 					if(res.errcode==200){
