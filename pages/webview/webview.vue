@@ -14,6 +14,14 @@ export default {
 			},
 			src: this.$store.state.webviewSrc
 		};
+	},
+	onShow(){
+		if(this.$store.state.webviewSrc==null||this.$store.state.webviewSrc==""){
+			uni.navigateBack()
+		}
+	},
+	onHide(){
+		this.$store.state.webviewSrc = null;
 	}
 };
 </script>

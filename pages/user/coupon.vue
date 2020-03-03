@@ -1,42 +1,37 @@
 <template>
 	<view class="content">
-
-		<swiper class="swiper-box" duration="300" >
-			<swiper-item class="tab-content"  >
-				<scroll-view 
-					class="list-scroll-content" 
-					scroll-y
-					@scrolltolower="loadData"
-				>
-					<!-- 空白页 -->
-					<empty v-if="loaded === true && couponList.length === 0"></empty>
-					<view v-for="(item,index) in couponList" :key="index"
-						class="order-item mask">
-                        <view class="mask-content" @click.stop.prevent="stopPrevent">
-                        	<!-- 优惠券页面，仿mt -->
-                        	<view class="coupon-item"  @click="toPDD(item.webUrl)">
-                        		<view class="con">
-                        			<view class="left">
-                        				<text class="title">{{item.goodsName}}</text>
-                        				<text class="time">创建时间{{item.addTime/1000|dateFormat}}</text>
-                        			</view>
-                        			<view class="right">
-                        				<text class="price">{{item.money/100}}</text>
-                        				<text></text>
-                        			</view>
-                        			
-                        			<view class="circle l"></view>
-                        			<view class="circle r"></view>
-                        		</view>
-                        		<text class="tips">点击跳转拼多多</text>
-                        	</view>
-                        </view>
-                    </view>
-					<uni-load-more :status="loadingType"></uni-load-more>
-					
-				</scroll-view>
-			</swiper-item>
-		</swiper>
+		<scroll-view 
+			class="list-scroll-content" 
+			scroll-y
+			@scrolltolower="loadData"
+		>
+			<!-- 空白页 -->
+			<empty v-if="loaded === true && couponList.length === 0"></empty>
+			<view v-for="(item,index) in couponList" :key="index"
+				class="order-item mask">
+				<view class="mask-content" @click.stop.prevent="stopPrevent">
+					<!-- 优惠券页面，仿mt -->
+					<view class="coupon-item"  @click="toPDD(item)">
+						<view class="con">
+							<view class="left">
+								<text class="title">{{item.goodsName}}</text>
+								<text class="time">创建时间{{item.addTime/1000|dateFormat}}</text>
+							</view>
+							<view class="right">
+								<text class="price">{{item.money/100}}</text>
+								<text></text>
+							</view>
+							
+							<view class="circle l"></view>
+							<view class="circle r"></view>
+						</view>
+						<text class="tips">点击跳转拼多多</text>
+					</view>
+				</view>
+			</view>
+			<uni-load-more :status="loadingType"></uni-load-more>
+			
+		</scroll-view>
 	</view>
 </template> 
 <script>
@@ -62,23 +57,26 @@
 			 * 替换onLoad下代码即可
 			 */
 			this.tabCurrentIndex = +options.state;
-			// #ifndef MP
 			this.loadData()
-			// #endif
-			// #ifdef MP
-			if(options.state == 0){
-				this.loadData()
-			}
-			// #endif
 			
 		},
 		 
 		methods: {
-            toPDD(webUrl){
-                this.$store.state.webviewSrc = webUrl ;
-                uni.navigateTo({
-                    url: `/pages/webview/webview`
-                })
+            toPDD(item){
+				//#ifdef MP
+				uni.navigateToMiniProgram({
+					appId:item.pddWeAppAppId,
+					path:item.weAppUrl
+				})
+				//#endif
+				//#ifndef MP
+				this.$store.state.webviewSrc = item.webUrl ;
+				uni.navigateTo({
+				    url: `/pages/webview/webview`
+				})
+				//#endif
+				
+               
             },
 			//获取订单列表
 			loadData(source){

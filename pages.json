@@ -126,6 +126,16 @@
 					}
 				}
 			}
+		},{
+			"path": "pages/channel/channel",
+			"style": {
+				"navigationBarTitleText": "",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
 		}, {
 			"path": "pages/user/coupon",
 			"style": {

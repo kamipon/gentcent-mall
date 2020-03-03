@@ -310,11 +310,20 @@
                                     money: this.goodsDeta.coupon_discount,
                                     name: this.goodsDeta.goods_name
                                     },{auth: true}).then(res => {
+										console.log(res);
                                         if(res.flag){
-                                            this.$store.state.webviewSrc =res.coupon.webUrl ;
-                                            uni.navigateTo({
-                                                url: `/pages/webview/webview`
-                                            })
+											//#ifdef MP
+											uni.navigateToMiniProgram({
+												appId:res.coupon.pddWeAppAppId,
+												path:res.coupon.weAppUrl
+											})
+											//#endif
+											//#ifndef MP
+											this.$store.state.webviewSrc =res.coupon.webUrl ;
+											uni.navigateTo({
+											    url: `/pages/webview/webview`
+											})
+											//#endif
                                         }else{
                                             alert(res.msg)
                                         }

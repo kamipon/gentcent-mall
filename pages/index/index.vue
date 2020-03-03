@@ -232,13 +232,24 @@ export default {
 		},
 		navCarouselList(id) {
 			this.$_post('app_index/theme/gen', { id }, { auth: true }).then(res => {
+				//#ifdef MP
+				uni.navigateToMiniProgram({
+					appId:res.data.weAppInfo.appId,
+					path:res.data.weAppInfo.pagePath
+				})
+				//#endif
+				//#ifndef MP
 				this.navToWebview({ src: res.data.url });
+				//#endif
 			});
 		},
 		navChannellList(type) {
-			this.$_post('app_index/channel/gen', { type }, { auth: true }).then(res => {
-				this.navToWebview({ src: res.data.url });
-			});
+			// this.$_post('app_index/channel/gen', { type }, { auth: true }).then(res => {
+			// 	this.navToWebview({ src: res.data.url });
+			// });
+			uni.navigateTo({
+				url:"/pages/channel/channel?channelType="+type
+			})
 		},
 		loadCarousel() {
 			this.$_get('app_index/theme/list', {}, { loading: false }).then(res => {
@@ -359,26 +370,13 @@ export default {
 	}
 }
 page {
-	.cate-section {
-		position: relative;
-		z-index: 5;
-		border-radius: 16upx 16upx 0 0;
-		margin-top: -20upx;
-	}
 	.carousel-section {
-		padding: 0;
 		.titleNview-placing {
 			padding-top: 0;
-			height: 0;
+			height: 20upx;
 		}
-		.carousel {
-			.carousel-item {
-				padding: 0;
-			}
-		}
-		.swiper-dots {
-			left: 45upx;
-			bottom: 40upx;
+		.titleNview-background{
+			height: 350upx;
 		}
 	}
 }
