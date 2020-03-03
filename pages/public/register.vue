@@ -70,9 +70,11 @@ export default {
             djs: 60,
             isRegister : false,
             promptVisible :false,
+            wxMember : '',
 		};
 	},
-	onLoad() {
+	onLoad(options) {
+        this.wxMember= options.wxMember;
     },
 	methods: {
 		input(e){
@@ -108,7 +110,7 @@ export default {
         },
 		tolR() {
 			if(this.redId!=null && this.redId != ""){
-				this.loginAndBindPhone({phone: this.phone,authcode: this.authcode,redId:this.redId}).then(res => {
+				this.loginAndBindPhone({phone: this.phone,authcode: this.authcode,redId:this.redId,wxMember:this.wxMember}).then(res => {
                     this.logining = false;
                     this.$api.msg('登录成功');
 					this.$store.state.redId="";
@@ -130,7 +132,7 @@ export default {
             }
             if(this.isRegister){//登录
                 this.logining = true;
-                this.login({phone: this.phone,code: this.authcode}).then(res => {
+                this.login({phone: this.phone,code: this.authcode,wxMember:this.wxMember}).then(res => {
                     this.logining = false;
                     this.$api.msg('登录成功');
                     setTimeout(()=>{
@@ -153,7 +155,7 @@ export default {
         toRegister(isShotId=false){
             this.logining = true;
             this.register({phone: this.phone,invcode: this.invcode,
-            authcode: this.authcode})
+            authcode: this.authcode,wxMember:this.wxMember})
             .then(res => {
                 this.logining = false;
                 this.$api.msg('注册成功');

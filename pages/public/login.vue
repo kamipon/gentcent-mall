@@ -12,7 +12,7 @@
 			<view class="input-content">
 				
 			</view>
-			<button class="confirm-btn" @click="wxLogin" 
+			<button class="confirm-btn" open-type='getUserInfo' @click="wxLogin" 
             :disabled="logining">微信一键登录</button>
 			<view class="forget-section" @click="toRegist">
 				使用手机号登录
@@ -51,6 +51,53 @@
 					url:"/pages/public/register"
 				})
 			},
+                
+            wxLogin(){
+                let _this = this;
+                uni.getUserInfo({
+                    provider: 'weixin',
+                    success: (res)=> {
+                        uni.login({
+                          provider: 'weixin',
+                          success:  (loginRes)=>{
+                              
+                            this.$_get("app_WXLogin/login",{
+                                code: loginRes.code,
+                                avatarUrl: res.userInfo.avatarUrl,
+                                gender: res.userInfo.gender,
+                                nickName: res.userInfo.nickName,
+                                }).then(res3 => {
+                                        console.log(res3)
+                                    if(res3.flag){
+                                        if(res3.register){//注册
+                                            uni.redirectTo({
+                                                url:`/pages/public/register?wxMember=${res3.wxMember}`
+                                            })
+                                        }else{ //用户存在 直接登录
+                                            this.login({
+                                                wxMember:res3.wxMember}).then(res => {
+                                                this.logining = false;
+                                                this.$api.msg('登录成功');
+                                                setTimeout(()=>{
+                                                    uni.navigateBack();
+                                                }, 200)
+                                            }).catch(res=>{
+                                                this.logining = false;
+                                                this.$api.msg(res.msg);
+                                            });
+                                        }
+                                    }else{
+                                        this.$api.msg(res3.msg); 
+                                    }
+                            })
+                          }
+                        });
+                    },
+                    fail(res) {
+                         console.log(res)
+                    }
+                });
+            },
 			toLogin(){
 				this.logining = true;
 				this.login({phone: this.phone,password: this.password}).then(res => {
