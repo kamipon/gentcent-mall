@@ -1,10 +1,16 @@
+
+import {mapState } from 'vuex';  
 export default{
+    computed: {
+        ...mapState(['hasLogin',"domainName",'userInfo'])
+    },
     data(){
         return {
                        //设置默认的分享参数
             share:{
                 title:'多多客礼券商城',
-                path:'/pages/index/index',
+                path:'/pages/share/share',
+                path2:'/pages/index/index',
                 imageUrl:'',
                 desc:'',
                 content:''
@@ -12,9 +18,16 @@ export default{
         }
     },
     onShareAppMessage(res) {
+        let p ;
+        console.log(this.hasLogin)
+        if(this.hasLogin){
+            p = this.share.path+`?shotId=${this.userInfo.shotId}`
+        }else{
+            p = this.share.path2
+        }
         return {
             title:this.share.title,
-            path:this.share.path,
+            path:p,
             imageUrl:this.share.imageUrl,
             desc:this.share.desc,
             content:this.share.content,
