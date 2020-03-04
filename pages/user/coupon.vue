@@ -65,8 +65,8 @@
             toPDD(item){
 				//#ifdef MP
 				uni.navigateToMiniProgram({
-					appId:item.pddWeAppAppId,
-					path:item.weAppUrl
+					appId:item.weAppInfoAppId,
+					path:item.weAppInfoPagePath
 				})
 				//#endif
 				//#ifndef MP
