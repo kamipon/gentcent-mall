@@ -50,6 +50,16 @@
             //没登录去登录
             this.getUrl();
 		},
+        onShareAppMessage(res) {
+            if (res.from === 'button') {// 来自页面内分享按钮
+              console.log(res.target)
+            }
+            return {
+              title: '多多客礼券商城',
+              path: this.url,
+              imageUrl:''
+            }
+          },
 		methods: {
 			...mapActions(['setShotId']),
             fzlj(){
