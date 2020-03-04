@@ -74,7 +74,9 @@ export default {
 		};
 	},
 	onLoad(options) {
-        this.wxMember= options.wxMember;
+        if(options.wxMember){
+            this.wxMember= options.wxMember;
+        }
     },
 	methods: {
 		input(e){
