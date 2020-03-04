@@ -21,7 +21,7 @@
     import h5Copy  from '@/js/junyi-h5-copy.js' //控制剪切板
 	export default {
         computed: {
-        	...mapState(['hasLogin','userInfo'])
+        	...mapState(['hasLogin','userInfo',"domainName"])
         },
 		data() {
 			return {
@@ -50,16 +50,6 @@
             //没登录去登录
             this.getUrl();
 		},
-        onShareAppMessage(res) {
-            if (res.from === 'button') {// 来自页面内分享按钮
-              console.log(res.target)
-            }
-            return {
-              title: '多多客礼券商城',
-              path: this.url,
-              imageUrl:''
-            }
-          },
 		methods: {
 			...mapActions(['setShotId']),
             fzlj(){
@@ -77,7 +67,7 @@
                }
             },
             getUrl(){
-                this.url = "http://pdd.chaoniuma.cn/"+`web/pages/share/share?shotId=${this.userInfo.shotId}`
+                this.url = this.domainName+`web/pages/share/share?shotId=${this.userInfo.shotId}`
                 this.getQr();
             },
             getQr(){
