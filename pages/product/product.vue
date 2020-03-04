@@ -302,7 +302,7 @@
                 
                 if(this.hasLogin){
                     uni.showModal({
-                        content: `确定需要使用${this.goodsDeta.coupon_discount}点券创建订单吗?`,
+                        content: `确定使用${this.goodsDeta.coupon_discount}余额生成优惠券吗?`,
                         success: (e)=>{
                             if(e.confirm){
                                 this.$_get("app_coupon/generate",{
@@ -314,8 +314,8 @@
                                         if(res.flag){
 											//#ifdef MP
 											uni.navigateToMiniProgram({
-												appId:res.coupon.pddWeAppAppId,
-												path:res.coupon.weAppUrl
+												appId:res.coupon.weAppInfoAppId,
+												path:res.coupon.weAppInfoPagePath
 											})
 											//#endif
 											//#ifndef MP

@@ -30,14 +30,39 @@
 						</view>
 						<view class="item-right">
 							<text class=" title" @click="navTo('/pages/product/product?id='+item.goods_id)">{{item.goods_name}}</text>
-							<text class="attr">¥{{item.min_normal_price}}</text>
-							<text class="price">¥{{item.min_group_price}}</text>
+							<text class="attr">原价：¥{{item.min_normal_price}}</text>
+							<text class="price">券后价：¥{{item.min_group_price}}</text>
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
 					</view>
 				</block>
 			</view>
 		</view>
+		
+		<!-- 为您精选 -->
+		<view class="f-header m-t">
+			<view class="tit-box">— 为您精选 —</view>
+		</view>
+		<view class="guess-section">
+			<view v-for="(item, index) in goodsList" :key="index" class="guess-item" @click="navToDetailPage(item)">
+				<view class="image-wrapper"><image :src="item.goodsThumbnailUrl" mode="aspectFill" lazy-load fade-show></image></view>
+				<text class="title clamp2">{{ item.goodsName }}</text>
+				<text class="price">
+					￥{{ ((item.minGroupPrice - item.couponDiscount) / 100) | toFiexd }}
+					<text class="discount-price">￥{{ (item.minGroupPrice / 100) | toFiexd }}</text>
+				</text>
+				<text class="sales-volume">
+					已售
+					<text class="num">{{ item.salesTip }}</text>
+				</text>
+				<text class="coupon">
+					<text class="coupon-discount">{{ item.couponDiscount / 100 }}元券</text>
+					<text class="coupon-remain">剩{{ item.couponRemainQuantity }}张</text>
+				</text>
+			</view>
+			<view class="load-all-text">— 已全部加载 —</view>
+		</view>
+		
 	</view>
 </template>
 
@@ -57,9 +82,11 @@
 				empty: false, //空白页现实  true|false
 				cartList: [],
                 timeOutEvent : 0,//长按定时器
+				goodsList:[]
 			};
 		},
 		onLoad(){
+			this.loadGoodsData();
 		},
         onShow() {
             this.loadData();
@@ -79,7 +106,18 @@
 		computed:{
 			...mapState(['hasLogin'])
 		},
+		filters: {
+			toFiexd(num, pre = 2) {
+				return parseFloat(num).toFixed(pre);
+			}
+		},
 		methods: {
+			loadGoodsData() {
+				Math.random()
+				this.$_get('app_index/goods/search', { pageIndex: Math.floor(Math.random() * Math.floor(10)), pageSize: 14 }, { loading: false }).then(res => {
+					this.goodsList = this.goodsList.concat(res.data.goodsSearchResponse.goodsList);
+				});
+			},
             navTo(url){
             	uni.navigateTo({  
             		url
@@ -89,9 +127,12 @@
 			loadData(){
                 if(this.hasLogin){
                     this.$_get("app_favorites/list",{},{auth: true,loading: true}).then(res => {
-                        console.log(res)
-                        this.cartList = res.goods_basic_detail_response.goods_list;;
-                        console.log(this.cartList)
+						if(res.goods_basic_detail_response){
+							this.cartList = res.goods_basic_detail_response.goods_list;;
+							console.log(this.cartList)
+						}else{
+							this.cartList = [];
+						}
                     })
                 }
 			},
@@ -155,15 +196,19 @@
 </script>
 
 <style lang='scss'>
+	.load-all-text{
+		width: 100%;
+		padding: 20upx 0;
+		font-size: 26upx;
+		text-align: center;
+		color: $font-color-grey;
+	}
 	.container{
-		padding-bottom: 134upx;
+		background-color: #f5f5f5;
 		/* 空白页 */
 		.empty{
-			position:fixed;
-			left: 0;
-			top:0;
 			width: 100%;
-			height: 100vh;
+			min-height: 400upx;
 			padding-bottom:100upx;
 			display:flex;
 			justify-content: center;
@@ -191,6 +236,7 @@
 		display:flex;
 		position:relative;
 		padding:30upx 40upx;
+		background-color: #FFFFFF;
         .img{
             width: 230upx;
             height: 230upx;
@@ -236,6 +282,7 @@
 			.price{
 				height: 50upx;
 				line-height:50upx;
+				color:$font-color-red
 			}
             
             .title{
@@ -259,5 +306,102 @@
 	.action-section .checkbox.checked,
 	.cart-item .checkbox.checked{
 		color: $uni-color-primary;
+	}
+	/* 猜你喜欢 */
+	.guess-section {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0 20upx;
+		background: $backg-color-grey;
+		.guess-item {
+			margin-top: 16upx;
+			background: #fff;
+			display: flex;
+			flex-direction: column;
+			width: 49%;
+			padding-bottom: 20upx;
+			&:nth-child(2n + 1) {
+				margin-right: 2%;
+			}
+		}
+		.image-wrapper {
+			width: 100%;
+			height: 330upx;
+			border-radius: 3px;
+			overflow: hidden;
+			image {
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+			}
+		}
+		.title {
+			font-size: 26upx;
+			color: $font-color-dark;
+			line-height: 38upx;
+			width: 100%;
+			padding: 18upx 18upx 20upx 18upx;
+			height: 96upx;
+		}
+		.price {
+			margin-top: 10upx;
+			font-size: 36upx;
+			color: $font-color-red;
+			line-height: 1;
+			font-weight: 600;
+			margin-left: 16upx;
+			.discount-price {
+				font-size: 24upx;
+				color: $font-color-grey;
+				line-height: 1;
+				margin-left: 10upx;
+				font-weight: 400;
+				text-decoration: line-through;
+			}
+		}
+		.sales-volume {
+			font-size: 24upx;
+			margin-top: 14upx;
+			margin-left: 18upx;
+			color: $font-color-grey;
+			.num {
+				margin-left: 8upx;
+			}
+		}
+		.coupon {
+			font-size: 22upx;
+			margin-top: 20upx;
+			margin-left: 18upx;
+			border-radius: 4upx;
+			border: 2upx solid $font-color-red;
+			align-self: flex-start;
+		}
+	
+		.coupon-discount {
+			color: #f5f5f5;
+			background-color: $font-color-red;
+			padding: 0 4upx;
+		}
+	
+		.coupon-remain {
+			background-color: #fff;
+			color: $font-color-red;
+			padding: 0 4upx;
+		}
+	}
+	.f-header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 70upx;
+		.tit-box {
+			flex: 1;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			font-size: 30upx;
+			color: $font-color-grey;
+		}
 	}
 </style>

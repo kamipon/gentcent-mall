@@ -1,12 +1,12 @@
 {
-    "name" : "拼多多优惠券商城",
+    "name" : "多多客礼券商城",
     "appid" : "__UNI__EA8652B",
-    "description" : "拼多多优惠券商城",
+    "description" : "多多客礼券商城",
     "versionName" : "1.0.0",
     "versionCode" : 100,
     "transformPx" : false,
     "h5" : {
-        "title" : "拼多多优惠券商城",
+        "title" : "多多客礼券商城",
         "router" : {
             "mode" : "history",
             "base" : "/web/"
@@ -72,9 +72,7 @@
             "urlCheck" : false
         },
         "permission" : {},
-		"navigateToMiniProgramAppIdList" : [
-			"wx32540bd863b27570"
-		]
+        "navigateToMiniProgramAppIdList" : [ "wx32540bd863b27570" ]
     }
 }
 /* 5+App特有相关 */

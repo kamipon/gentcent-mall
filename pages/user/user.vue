@@ -2,8 +2,8 @@
     <view class="container">  
 		
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
-			<view class="user-info-box">
+			<image class="bg" mode="aspectFill" src="/static/bg.jpg"></image>
+			<view class="user-info-box" @click="navTo()">
 				<view class="portrait-box">
 					<image class="portrait" :src="userInfo.picUrl || '/static/missing-face.png'"></image>
 				</view>
@@ -11,8 +11,7 @@
 					<text class="username">{{userInfo.nick || '游客'}}</text>
 				</view>
 			</view>
-			<view class="vip-card-box">
-				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
+			<!-- <view class="vip-card-box">
 				<view class="b-btn">
 					立即开通
 				</view>
@@ -22,7 +21,7 @@
 				</view>
 				<text class="e-m">DCloud Union</text>
 				<text class="e-b">开通会员开发无bug 一测就上线</text>
-			</view>
+			</view> -->
 		</view>
 		
 		<view 
@@ -31,23 +30,20 @@
 				transform: coverTransform,
 				transition: coverTransition
 			}]"
-			@touchstart="coverTouchstart"
-			@touchmove="coverTouchmove"
-			@touchend="coverTouchend"
 		>
 			<image class="arc" src="/static/arc.png"></image>
 			
 			<view class="tj-sction">
 				<view class="tj-item">
-					<text class="num">{{userInfo.money || 'XX.xx'}}</text>
+					<text class="num">{{userInfo.money || 0}}</text>
 					<text>余额</text>
 				</view>
 				<view class="tj-item" @click="navTo('/pages/user/coupon')">
-					<text class="num">0</text>
+					<text class="num">{{couponNum}}</text>
 					<text>优惠券</text>
 				</view>
 				<view class="tj-item">
-					<text class="num">20</text>
+					<text class="num">0</text>
 					<text>积分</text>
 				</view>
 			</view>
@@ -67,7 +63,7 @@
 				</view>
 				<view class="order-item" @click="navTo('/pages/order/order?state=3')" hover-class="common-hover"  :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>退款/售后</text>
+					<text>已失效</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
@@ -86,9 +82,9 @@
 				</scroll-view> -->
 				<!-- <list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的钱包" tips="您的会员还有3天过期"></list-cell> -->
 				<!-- <list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell> -->
-				<list-cell icon="icon-share" iconColor="#9789f7" title="分享"  @eventClick="navTo('/pages/share/share')" tips="邀请好友赢10万大礼"></list-cell>
+				<list-cell icon="icon-share" iconColor="#9789f7" title="分享"  @eventClick="navTo('/pages/share/share')"></list-cell>
 				<!-- <list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="晒单" tips="晒单抢红包"></list-cell> -->
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏"></list-cell>
+				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toCollect()"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" border="" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -111,35 +107,36 @@
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
+				couponNum: 0
 			}
 		},
 		onLoad(){
 		},
+		onShow(){
+			if(this.hasLogin){
+				this.$_get("app_member/couponNum",{},{loading:false}).then(res=>{
+					this.couponNum = res.num;
+				});
+			}else{
+				this.couponNum = 0;
+			}
+			
+		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
-			if (index === 0) {
-				this.navTo('/pages/set/set');
-			}else if(index === 1){
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '/pages/notice/notice'
-				})
-			}
+			this.navTo('/pages/set/set');
 		},
 		// #endif
         computed: {
 			...mapState(['hasLogin','userInfo'])
 		},
         methods: {
-
+			toCollect(){
+				uni.switchTab({
+					url:"/pages/collect/collect"
+				})
+			},
 			/**
 			 * 统一跳转接口,拦截未登录路由
 			 * navigator标签现在默认没有转场动画，所以用view
@@ -148,6 +145,7 @@
 				if(!this.hasLogin){
 					url = '/pages/public/login';
 				}
+				if(!url) return;
 				uni.navigateTo({  
 					url
 				})  
@@ -223,8 +221,7 @@
 			top: 0;
 			width: 100%;
 			height: 100%;
-			filter: blur(1px);
-			opacity: .7;
+			opacity: .8;
 		}
 	}
 	.user-info-box{
@@ -294,7 +291,7 @@
 	}
 	.cover-container{
 		background: $page-color-base;
-		margin-top: -150upx;
+		margin-top: -180upx;
 		padding: 0 30upx;
 		position:relative;
 		background: #f5f5f5;

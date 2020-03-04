@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 分类推荐楼层 -->
 		<view class="hot-floor">
-			<view class="floor-img-box" @click="navChannellList(1)">
+			<view class="floor-img-box">
 				<image class="floor-img" :src="titlePic" mode="aspectFill"></image>
 			</view>
 		</view>

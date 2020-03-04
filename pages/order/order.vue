@@ -27,7 +27,7 @@
 						class="order-item"
 					>
 						<view class="i-top b-b">
-							<text class="time">{{item.goodsName}}</text>
+							<text class="time">{{item.orderCreateTime | dateFormat}}</text>
 							<text class="state" :style="{color: orderStateExp(item.orderStatus).stateTipColor}">
                             {{orderStateExp(item.orderStatus).stateTip}}</text>
 							<text 
@@ -37,9 +37,12 @@
 							></text>
 						</view>
                         <scroll-view class="goods-box" scroll-x>
-                        	<view class="goods-item">
-                        		<image class="goods-img" :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
-                        	</view>
+							<view style="display: flex;">
+								<view class="goods-item">
+									<image class="goods-img" :src="item.goodsThumbnailUrl" mode="aspectFill"></image>
+								</view>
+								<view class="goods-name">{{item.goodsName}}</view>
+							</view>
                         </scroll-view>
 						
 						<view class="price-box">
@@ -160,6 +163,7 @@
                         pageIndex : navItem.pageIndex},{auth: true}).then(res => {
                             res.orderList.forEach(item=>{
                         	navItem.orderList.push(item);
+							console.log(111,item)
                         })
                         //loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
                         this.$set(navItem, 'loaded', true);
@@ -344,6 +348,14 @@
 					transform: translateY(-50%);
 				}
 			}
+		}
+		.goods-name{
+			width: calc(100vw - 210upx);
+			display: inline-block;
+			white-space: initial;
+			margin-right: 24upx;
+			font-size: 32upx;
+			height: 120upx;
 		}
 		/* 多条商品 */
 		.goods-box{
