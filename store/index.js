@@ -11,6 +11,7 @@ const store = new Vuex.Store({
 		token: "",
 		userInfo: {},
 		webviewSrc: "",
+		domainName: "http://pdd.chaoniuma.cn/",
 		redId:""
 	},
 	mutations: {
