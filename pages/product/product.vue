@@ -325,7 +325,7 @@
 											})
 											//#endif
                                         }else{
-                                            alert(res.msg)
+                                            this.$api.msg(res.msg);
                                         }
                                 })
                             }
