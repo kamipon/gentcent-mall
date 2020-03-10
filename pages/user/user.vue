@@ -114,7 +114,7 @@
 		},
 		onShow(){
 			if(this.hasLogin){
-				this.$_get("app_member/couponNum",{},{loading:false}).then(res=>{
+				this.$_get("app_member/couponNum",{},{auth:true,loading:false}).then(res=>{
 					this.couponNum = res.num;
 				});
 			}else{

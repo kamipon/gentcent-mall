@@ -25,23 +25,27 @@
 				hotList: ['红酒','口罩','方便面','华为']	,//初始化推荐列表
                 keyword : "",
                 isFocus :false,
+				isRedirect:false
 			}
 		},
         onLoad(options){
         	this.keyword = options.keyword;
             if(this.keyword){
                 this.isFocus=true;
+				this.isRedirect=true;
             }
         },
 		methods: {
 			getSearchText(e) {
-				// uni.showToast({
-				// 	title:'回调的搜索信息: ' + e,
-				// 	icon:"none"
-				// })
-                uni.navigateTo({
-                	url: `/pages/product/searchList?keyword=${e}`
-                })
+				if(this.isRedirect){
+					uni.redirectTo({
+						url: `/pages/product/searchList?keyword=${e}`
+					})
+				}else{
+					uni.navigateTo({
+						url: `/pages/product/searchList?keyword=${e}`
+					})
+				}
 			}
 		},
 	}

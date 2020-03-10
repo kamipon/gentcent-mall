@@ -4,7 +4,7 @@ let preUrl;
 if (process.env.NODE_ENV === 'development') {
 	preUrl = "http://192.168.50.158/";
 } else {
-	preUrl = "http://pdd.chaoniuma.cn/";
+	preUrl = "https://pdd.chaoniuma.cn/";
 }
 
 export default {

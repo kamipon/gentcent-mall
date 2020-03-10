@@ -113,7 +113,7 @@
 		},
 		methods: {
 			navTosearch(v){
-                uni.navigateTo({
+                uni.redirectTo({
                 	url: `/pages/search/search?keyword=${v}`
                 });
             },
