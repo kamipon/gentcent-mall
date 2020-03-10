@@ -2,7 +2,8 @@ import store from '../../store'
 
 let preUrl;
 if (process.env.NODE_ENV === 'development') {
-	preUrl = "http://192.168.50.158/";
+	// preUrl = "http://192.168.50.158/";
+	preUrl = "https://pdd.chaoniuma.cn/";
 } else {
 	// #ifndef MP-WEIXIN
 	preUrl = "http://pdd.chaoniuma.cn/";
