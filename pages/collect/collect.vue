@@ -122,7 +122,7 @@
 			},
 			loadGoodsData() {
 				Math.random()
-				this.$_get('app_index/goods/search', { pageIndex: Math.floor(Math.random() * Math.floor(10)), pageSize: 14 }, { loading: false }).then(res => {
+				this.$_get('app_index/goods/search', { pageIndex: Math.floor(Math.random() * Math.floor(10)), pageSize: 14 }, { loading: true }).then(res => {
 					this.goodsList = this.goodsList.concat(res.data.goodsSearchResponse.goodsList);
 				});
 			},
