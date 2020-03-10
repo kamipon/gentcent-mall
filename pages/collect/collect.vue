@@ -112,6 +112,14 @@
 			}
 		},
 		methods: {
+			//详情页
+			navToDetailPage(item) {
+				//测试数据没有写id，用title代替
+				let id = item.goodsId;
+				uni.navigateTo({
+					url: `/pages/product/product?id=${id}`
+				});
+			},
 			loadGoodsData() {
 				Math.random()
 				this.$_get('app_index/goods/search', { pageIndex: Math.floor(Math.random() * Math.floor(10)), pageSize: 14 }, { loading: false }).then(res => {

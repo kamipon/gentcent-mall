@@ -5,7 +5,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// #ifdef MP 
-				"navigationBarTitleText": "多多客礼券商城",
+				"navigationBarTitleText": "码上好省",
 				//"navigationStyle": "custom",
 				// #endif 
 				"app-plus": {

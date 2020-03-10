@@ -1,88 +1,108 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
 		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
-		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">LOGIN</view>
-			<view class="welcome">登录</view>
+			<view class="title">{{ title }}></view>
 			<view class="input-content">
 				<view class="input-item">
 					<text class="tit">手机号码</text>
-					<input type="mobile" :value="phone" 
-                    placeholder="请输入手机号码" maxlength="11" data-key="phone" @input="inputChange" />
+					<input type="mobile" :value="phone" placeholder="输入手机号码" maxlength="11" data-key="phone" @input="inputChange" />
 				</view>
 				<view class="input-item yzm">
-					<view style="flex:2">
-                      <text class="tit">验证码</text>
-                      <input type="mobile" :value="authcode" 
-                      placeholder="请输入短信验证码" placeholder-class="input-empty" 
-                      maxlength="20" data-key="authcode" @input="inputChange" /> 
-                    </view>
-                    <view >
-                        <button @click="getyzm()" :class="yzm?'noclick':''">
-                            获取验证码
-                            <text v-if="yzm">({{djs}})</text>
-                            
-                        </button>
-                    </view>
+					<view style="flex:1;">
+						<input
+							type="mobile"
+							:value="authcode"
+							placeholder="输入验证码"
+							placeholder-class="input-empty"
+							maxlength="4"
+							data-key="authcode"
+							@input="inputChange"
+						/>
+					</view>
+					<view class="btn-box">
+						<!-- <button @click="getyzm()" class="yzm" :class="yzm ? 'noclick' : ''">
+							获取验证码
+							<text v-if="yzm">({{ djs }})</text>
+						</button> -->
+						<button v-if="!yzm" @click="getyzm()">获取验证码</button>
+						<text v-else>({{ djs }})后重发</text>
+					</view>
 				</view>
 			</view>
 			<button class="confirm-btn" @click="tolR" :disabled="logining">登录</button>
 		</view>
-        <view v-if="promptVisible" class="authcode">
-            <view class="uni-mask"></view>
-            <view class="uni-modal">
-                <view class="uni-modal__hd">
-                    <text>请输入邀请码</text>
-                    
-                </view>
-                <view class="uni-modal__bd">
-                    <input  :value="invcode" focus="true"   placeholder="请输入邀请码" @input="input"/>
-                </view>
-                <view class="uni-modal__ft">
-                    <view class="uni-modal__btn uni-modal__btn_default" @click="promptVisible=false">取消</view>
-                    <view class="uni-modal__btn uni-modal__btn_primary" @click="toRegister">确认</view>
-                </view>
-            </view>
-        </view>
+		<view v-if="promptVisible" class="authcode">
+			<view class="uni-mask">
+				<view class="wrapper">
+					<view class="title">邀请码</view>
+					<view class="title2">请填写邀请码</view>
+					<view class="input-content">
+						<view class="input-item">
+							<input :value="invcode" :focus="promptVisible" placeholder="" maxlength="11" @input="input" />
+						</view>
+					</view>
+					<text class="desc">长按粘贴邀请码</text>
+					<button class="confirm-btn" @click="toRegister">确定</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import {mapState } from 'vuex';  
+import { mapState } from 'vuex';
 export default {
-    
-    computed: {
-    	...mapState(['shotId','redId'])
-    },
+	computed: {
+		...mapState(['shotId', 'redId'])
+	},
 	data() {
 		return {
 			phone: '',
-            yzm :false,
-            jsyzm : false,
+			yzm: false,
+			jsyzm: false,
 			password: '',
 			invcode: '',
 			authcode: '1234',
 			logining: false,
-            djs: 60,
-            isRegister : false,
-            promptVisible :false,
-            wxMember : '',
+			djs: 60,
+			isRegister: false,
+			promptVisible: false,
+			wxMember: '',
+			title: '手机号登录'
 		};
 	},
 	onLoad(options) {
-        if(options.wxMember){
-            this.wxMember= options.wxMember;
-        }
-    },
+		if (options.wxMember) {
+			this.wxMember = options.wxMember;
+			this.title = '绑定手机号';
+		}
+	},
+	watch:{
+		yzm(newval,oldval){
+			var _this = this;
+			if(newval==true){
+				var interv = setInterval(()=>{
+					if(_this.djs==1){
+						_this.yzm = false;
+						_this.djs = 60;
+						clearInterval(interv);
+					}else{
+						_this.djs--;
+					}
+					
+				},1000)
+				
+			}
+		}
+	},
 	methods: {
-		input(e){
+		input(e) {
 			this.invcode = e.detail.value;
 		},
-		...mapActions(['register','login','setShotId','loginAndBindPhone']),
+		...mapActions(['register', 'login', 'setShotId', 'loginAndBindPhone']),
 		inputChange(e) {
 			const key = e.currentTarget.dataset.key;
 			this[key] = e.detail.value;
@@ -90,169 +110,154 @@ export default {
 		navBack() {
 			uni.navigateBack();
 		},
-        getyzm(){
-          if(!this.yzm){
-              if(this.phone==""){
-                    this.$api.msg('请输入手机号码!');
-                    return;
-              }
-              this.$_get("app_sms/get",{phone : this.phone}).then(res => {
-                this.$api.msg(res.msg);
-                if(res.flag){
-                    this.yzm=true;
-                    this.jsyzm = true;
-                    this.isRegister =  res.register;
-                }else{
-                }
-              }).catch(res=>{
-                  this.$api.msg("请求失败!"); 
-              });
-              
-          }
-        },
+		getyzm() {
+			if (!this.yzm) {
+				if (this.phone == '') {
+					this.$api.msg('请输入手机号码!');
+					return;
+				}
+				this.$_get('app_sms/get', { phone: this.phone })
+					.then(res => {
+						this.$api.msg(res.msg);
+						if (res.flag) {
+							this.yzm = true;
+							this.jsyzm = true;
+							this.isRegister = res.register;
+						} else {
+						}
+					})
+					.catch(res => {
+						this.$api.msg('请求失败!');
+					});
+			}
+		},
 		tolR() {
-			if(this.redId!=null && this.redId != ""){
-				this.loginAndBindPhone({phone: this.phone,authcode: this.authcode,redId:this.redId,wxMember:this.wxMember}).then(res => {
-                    this.logining = false;
-                    this.$api.msg('登录成功');
-					this.$store.state.redId="";
-                    setTimeout(()=>{
-                        uni.reLaunch({
-                        	url:"/pages/index/index"
-                        });
-                    }, 200)
-                }).catch(res=>{
-                    this.logining = false;
-                    this.$api.msg(res.msg);
-                });
+			if (this.redId != null && this.redId != '') {
+				this.loginAndBindPhone({ phone: this.phone, authcode: this.authcode, redId: this.redId, wxMember: this.wxMember })
+					.then(res => {
+						this.logining = false;
+						this.$api.msg('登录成功');
+						this.$store.state.redId = '';
+						setTimeout(() => {
+							uni.reLaunch({
+								url: '/pages/index/index'
+							});
+						}, 200);
+					})
+					.catch(res => {
+						this.logining = false;
+						this.$api.msg(res.msg);
+					});
 				return;
 			}
-			
-            if(!this.jsyzm){
+
+			if (!this.jsyzm) {
 				this.$api.msg('请接接收证码!');
-                return;
-            }
-            if(this.isRegister){//登录
-                this.logining = true;
-                this.login({phone: this.phone,code: this.authcode,wxMember:this.wxMember}).then(res => {
-                    this.logining = false;
-                    this.$api.msg('登录成功');
-                    setTimeout(()=>{
-                        uni.navigateBack();
-                    }, 200)
-                }).catch(res=>{
-                    this.logining = false;
-                    this.$api.msg(res.msg);
-                });
-            }else{//输入验证码 注册
-                if(this.shotId!=null&& this.shotId != ""){
-                    this.invcode = this.shotId;
-                    this.toRegister(true);
-                }else{
-                    this.promptVisible = true
-                }
-               
-            }
+				return;
+			}
+			if (this.isRegister) {
+				//登录
+				this.logining = true;
+				this.login({ phone: this.phone, code: this.authcode, wxMember: this.wxMember })
+					.then(res => {
+						this.logining = false;
+						this.$api.msg('登录成功');
+						setTimeout(() => {
+							uni.navigateBack();
+						}, 200);
+					})
+					.catch(res => {
+						this.logining = false;
+						this.$api.msg(res.msg);
+					});
+			} else {
+				//输入验证码 注册
+				if (this.shotId != null && this.shotId != '') {
+					this.invcode = this.shotId;
+					this.promptVisible = true;
+				} else {
+					this.promptVisible = true;
+				}
+			}
 		},
-        toRegister(isShotId=false){
-            this.logining = true;
-            this.register({phone: this.phone,invcode: this.invcode,
-            authcode: this.authcode,wxMember:this.wxMember})
-            .then(res => {
-                this.logining = false;
-                this.$api.msg('注册成功');
-                setTimeout(()=>{
-					if(isShotId){
-						this.setShotId(null);
-						uni.switchTab({
-							url:"/pages/index/index"
-						})
-					}else{
-						uni.navigateBack();
-					}
-                }, 200)
-            }).catch(res=>{
-                this.logining = false;
-                this.$api.msg(res.msg);
-            });
-        },
-		toLogin(){
+		toRegister(isShotId = false) {
+			this.logining = true;
+			this.register({ phone: this.phone, invcode: this.invcode, authcode: this.authcode, wxMember: this.wxMember })
+				.then(res => {
+					this.logining = false;
+					this.$api.msg('注册成功');
+					setTimeout(() => {
+						if (isShotId) {
+							this.setShotId(null);
+							uni.switchTab({
+								url: '/pages/index/index'
+							});
+						} else {
+							uni.navigateBack();
+						}
+					}, 200);
+				})
+				.catch(res => {
+					this.logining = false;
+					this.$api.msg(res.msg);
+				});
+		},
+		toLogin() {
 			uni.redirectTo({
-				url:"/pages/public/login"
-			})
-		},
+				url: '/pages/public/login'
+			});
+		}
 	}
 };
 </script>
 
 <style lang="scss">
-.authcode{
-    font-size: 40upx;
-    .uni-mask{
-        position: fixed;
-        z-index: 999;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background: rgba(0,0,0,.6);
-    }
-    .uni-modal{
-        position: fixed;
-        z-index: 999;
-        width: 80%;
-        max-width: 300px;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%,-50%);
-        transform: translate(-50%,-50%);
-        background-color: #fff;
-        text-align: center;
-        border-radius: 3px;
-        overflow: hidden;
-    }
-    .uni-modal__hd{
-        padding: 20upx ;
-    }
-    .uni-modal__bd{
-        padding: 40upx;
-    }
-    .uni-modal__ft{
-       position: relative;
-       line-height: 48px;
-       font-size: 18px;
-       display: -webkit-box;
-       display: -webkit-flex;
-       display: flex;
-    }
-    .uni-modal__btn{
-        display: block;
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-        color: #3cc51f;
-        text-decoration: none;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-        position: relative;
-    }
-    .uni-modal__btn_default{
-        color: #000;
-        border-right: 1px solid #d5d5d6;
-    }
-    .uni-modal__ft:after {
-        content: " ";
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        height: 1px;
-        border-top: 1px solid #d5d5d6;
-        color: #d5d5d6;
-        -webkit-transform-origin: 0 0;
-        transform-origin: 0 0;
-        -webkit-transform: scaleY(.5);
-        transform: scaleY(.5);
-    }
+.authcode {
+	font-size: 40upx;
+	.uni-mask {
+		position: fixed;
+		z-index: 999;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		background: #fff;
+	}
+	.wrapper{
+		padding-top: 150upx;
+		.title{
+			font-size: 42upx;
+		}
+		.title2{
+			padding-left: 60upx;
+			color: $font-color-grey;
+			font-size: 28upx;
+		}
+		.input-content{
+			margin-top: 100upx;
+			height: 100upx;
+			.input-item{
+				height: 100%;
+				border-bottom:  solid 12upx $font-color-red;
+				input{
+					font-size: 48upx;
+					height: 100%;
+					letter-spacing: 6upx;
+					font-weight: 600;
+					
+				}
+			}
+		}
+		.desc{
+			padding-left: 60upx;
+			color: $font-color-grey;
+			font-size: 28upx;
+		}
+		.confirm-btn{
+			margin-top: 10upx;
+		}
+	}
+	
 }
 page {
 	background: #fff;
@@ -280,91 +285,49 @@ page {
 	font-size: 40upx;
 	color: $font-color-dark;
 }
-.left-top-sign {
-	font-size: 120upx;
-	color: $page-color-base;
-	position: relative;
-	left: -16upx;
-}
-.right-top-sign {
-	position: absolute;
-	top: 80upx;
-	right: -30upx;
-	z-index: 95;
-	&:before,
-	&:after {
-		display: block;
-		content: '';
-		width: 400upx;
-		height: 80upx;
-		background: #b4f3e2;
-	}
-	&:before {
-		transform: rotate(50deg);
-		border-radius: 0 50px 0 0;
-	}
-	&:after {
-		position: absolute;
-		right: -198upx;
-		top: 0;
-		transform: rotate(-50deg);
-		border-radius: 50px 0 0 0;
-		/* background: pink; */
-	}
-}
-.left-bottom-sign {
-	position: absolute;
-	left: -270upx;
-	bottom: -320upx;
-	border: 100upx solid #d0d1fd;
-	border-radius: 50%;
-	padding: 180upx;
-}
-.welcome {
-	position: relative;
-	left: 50upx;
-	top: -60upx;
-	font-size: 46upx;
-	color: #555;
-	text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
-}
 .input-content {
 	padding: 0 60upx;
 }
 .input-item {
 	padding: 0 30upx;
-	background: $page-color-light;
-	height: 120upx;
-	border-radius: 4px;
+	padding-left: 0;
+	background: #fff;
+	height: 160upx;
 	margin-bottom: 50upx;
+	border-bottom:  solid 2upx #c1c1c1;
 	&:last-child {
 		margin-bottom: 0;
 	}
 	.tit {
-		height: 50upx;
-		line-height: 56upx;
-		font-size: $font-sm + 2upx;
+		height: 90upx;
+		line-height: 96upx;
+		font-size: $font-sm + 6upx;
 		color: $font-color-base;
 	}
 	input {
 		height: 60upx;
-		font-size: $font-base + 2upx;
 		color: $font-color-dark;
 		width: 100%;
+		font-size: 30upx;
 	}
+}
+.title {
+	font-size: 36upx;
+	padding-left: 60upx;
+	padding-top: 60upx;
+	padding-bottom: 20upx;
 }
 
 .confirm-btn {
 	width: 630upx;
-	height: 76upx;
-	line-height: 76upx;
-	border-radius: 50px;
+	height: 86upx;
+	line-height: 86upx;
+	font-weight: 600;
 	margin-top: 70upx;
-	background: #53a5ff;
+	background: $font-color-red;
 	color: #fff;
 	font-size: $font-lg;
 	&:after {
-		border-radius: 100px;
 	}
 }
 .forget-section {
@@ -386,20 +349,32 @@ page {
 		margin-left: 10upx;
 	}
 }
-.yzm{
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    button{
-        color: #fff;
-        background: rgb(227,20,54);
-        font-size: 24upx;
-        height: 80upx;
-        margin-top: 20upx;
-    }
-    .noclick{
-        color: #ccc;
-        background: rgb(246,246,246);
-    }
+.yzm {
+	display: flex;
+	height: 70upx;
+	.btn-box{
+		align-self: flex-end;
+		position: relative;
+		right: 0;
+		button{
+			background-color: $font-color-red;
+			color: #fff;
+			font-size: 24upx;
+			margin-left: auto;
+			height: 65upx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 6upx;
+			margin-bottom: 8upx;
+			margin-right: -22upx;
+		}
+	}
+	text{
+		color: $font-color-grey;
+		font-size: 32upx;
+		margin-right: -28upx;
+		line-height: 60upx;
+	}
 }
 </style>
