@@ -32,7 +32,7 @@ import uniIcons from '@/components/uni-icons/uni-icons.vue';
 import { mapActions } from 'vuex';
 
 export default {
-	comments: { uniIcons },
+	components: { uniIcons },
 	data() {
 		return {
 			phone: '',

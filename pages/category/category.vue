@@ -42,6 +42,9 @@
 		},
 		onLoad(){
 			this.loadData();
+			uni.showLoading({
+				title: '正在加载'
+			});
             this.$_get("app_goods/cats",{},{loading:false}).then(res => {//获取一级目录
                 let list = res.goods_cats_get_response.goods_cats_list;
                 list.forEach(item=>{
@@ -52,6 +55,7 @@
                 this.$_get("app_goods/cats",{id:this.cats[0].cat_id},{loading:false}).then(res => {//获取二级目录\
                     let slist = res.goods_cats_get_response.goods_cats_list;
                     this.cats[0].slist = slist;
+					uni.hideLoading();
                 });
             });
 		},

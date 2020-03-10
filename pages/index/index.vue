@@ -183,15 +183,29 @@ export default {
 		}
 	},
 	onLoad({ redId }) {
-		this.$store.commit("setRedId",redId);
+		this.$store.commit('setRedId', redId);
 		setTimeout(() => {
 			if (redId) {
 				this.loginWithRedId(redId);
 			}
 		}, 500);
-		this.loadData();
-		this.loadCarousel();
-		this.loadChanneGoods();
+
+		var snum = 0;
+		uni.showLoading({
+			title: '正在加载'
+		});
+		this.loadData().then(() => {
+			snum++;
+			if (snum == 3) uni.hideLoading();
+		});
+		this.loadCarousel().then(() => {
+			snum++;
+			if (snum == 3) uni.hideLoading();
+		});
+		this.loadChanneGoods().then(() => {
+			snum++;
+			if (snum == 3) uni.hideLoading();
+		});
 	},
 	onReachBottom() {
 		this.more = 'loading';
@@ -208,9 +222,9 @@ export default {
 			this.$_post('app_index/lottery/gen', {}, { auth: true }).then(res => {
 				//#ifdef MP
 				uni.navigateToMiniProgram({
-					appId:res.data.weAppInfo.appId,
-					path:res.data.weAppInfo.pagePath
-				})
+					appId: res.data.weAppInfo.appId,
+					path: res.data.weAppInfo.pagePath
+				});
 				//#endif
 				//#ifndef MP
 				this.navToWebview({ src: res.data.singleUrlList.url });
@@ -221,9 +235,9 @@ export default {
 			this.$_post('app_index/resource/gen', { type }, { auth: true }).then(res => {
 				//#ifdef MP
 				uni.navigateToMiniProgram({
-					appId:res.data.weAppInfo.appId,
-					path:res.data.weAppInfo.pagePath
-				})
+					appId: res.data.weAppInfo.appId,
+					path: res.data.weAppInfo.pagePath
+				});
 				//#endif
 				//#ifndef MP
 				this.navToWebview({ src: res.data.singleUrlList.url });
@@ -234,9 +248,9 @@ export default {
 			this.$_post('app_index/theme/gen', { id }, { auth: true }).then(res => {
 				//#ifdef MP
 				uni.navigateToMiniProgram({
-					appId:res.data.weAppInfo.appId,
-					path:res.data.weAppInfo.pagePath
-				})
+					appId: res.data.weAppInfo.appId,
+					path: res.data.weAppInfo.pagePath
+				});
 				//#endif
 				//#ifndef MP
 				this.navToWebview({ src: res.data.url });
@@ -244,48 +258,51 @@ export default {
 			});
 		},
 		navChannellList(type) {
-			// this.$_post('app_index/channel/gen', { type }, { auth: true }).then(res => {
-			// 	this.navToWebview({ src: res.data.url });
-			// });
 			uni.navigateTo({
-				url:"/pages/channel/channel?channelType="+type
-			})
+				url: '/pages/channel/channel?channelType=' + type
+			});
 		},
 		loadCarousel() {
-			this.$_get('app_index/theme/list', {}, { loading: false }).then(res => {
-				res.data.forEach(item => {
-					this.carouselList.push({
-						background: 'rgb(203, 87, 60)',
-						src: item.imageUrl,
-						id: item.id
+			return new Promise(resolve => {
+				this.$_get('app_index/theme/list', {}, { loading: false }).then(res => {
+					res.data.forEach(item => {
+						this.carouselList.push({
+							background: 'rgb(203, 87, 60)',
+							src: item.imageUrl,
+							id: item.id
+						});
 					});
+					this.titleNViewBackground = 'rgb(203, 87, 60)';
+					this.swiperLength = this.carouselList.length;
+					resolve();
 				});
-				this.titleNViewBackground = 'rgb(203, 87, 60)';
-				this.swiperLength = this.carouselList.length;
 			});
 		},
 		loadChanneGoods() {
-			this.$_get('app_index/goods/channel', {}, { loading: false }).then(res => {
-				console.log(res);
-				this.channelGoodsList_1 = res.list1;
-				this.channelGoodsList_2 = res.list2;
-				this.channelGoodsList_3 = res.list3;
+			return new Promise(resolve => {
+				this.$_get('app_index/goods/channel', {}, { loading: false }).then(res => {
+					console.log(res);
+					this.channelGoodsList_1 = res.list1;
+					this.channelGoodsList_2 = res.list2;
+					this.channelGoodsList_3 = res.list3;
+					resolve();
+				});
 			});
 		},
-		/**
-		 * 分次请求未作整合
-		 */
 		loadData() {
-			let pageSize = 40;
-			this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize }, { loading: false }).then(res => {
-				console.log(res);
-				this.pageIndex++;
-				if (Math.round(res.data.goodsSearchResponse.totalCount / pageSize) <= this.pageIndex) {
-					this.more = 'noMore';
-				} else {
-					this.more = 'more';
-				}
-				this.goodsList = this.goodsList.concat(res.data.goodsSearchResponse.goodsList);
+			return new Promise(resolve => {
+				let pageSize = 40;
+				this.$_get('app_index/goods/search', { pageIndex: this.pageIndex, pageSize: pageSize }, { loading: false }).then(res => {
+					console.log(res);
+					this.pageIndex++;
+					if (Math.round(res.data.goodsSearchResponse.totalCount / pageSize) <= this.pageIndex) {
+						this.more = 'noMore';
+					} else {
+						this.more = 'more';
+					}
+					this.goodsList = this.goodsList.concat(res.data.goodsSearchResponse.goodsList);
+					resolve();
+				});
 			});
 		},
 		//轮播图切换修改背景色
@@ -375,7 +392,7 @@ page {
 			padding-top: 0;
 			height: 20upx;
 		}
-		.titleNview-background{
+		.titleNview-background {
 			height: 350upx;
 		}
 	}
