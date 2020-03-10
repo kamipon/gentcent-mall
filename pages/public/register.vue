@@ -3,7 +3,7 @@
 		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="title">{{ title }}></view>
+			<view class="title">{{ title }} <uni-icons type="arrowright" size="18" color="#000" /></view>
 			<view class="input-content">
 				<view class="input-item">
 					<text class="tit">手机号码</text>
@@ -36,11 +36,11 @@
 		<view v-if="promptVisible" class="authcode">
 			<view class="uni-mask">
 				<view class="wrapper">
-					<view class="title">邀请码</view>
+					<view class="title">邀请码 <uni-icons type="arrowright" size="18" color="#000" /></view>
 					<view class="title2">请填写邀请码</view>
 					<view class="input-content">
 						<view class="input-item">
-							<input :value="invcode" :focus="promptVisible" placeholder="" maxlength="11" @input="input" />
+							<input :value="invcode" :focus="promptVisible" maxlength="11" @input="input" />
 						</view>
 					</view>
 					<text class="desc">长按粘贴邀请码</text>
@@ -54,7 +54,9 @@
 <script>
 import { mapActions } from 'vuex';
 import { mapState } from 'vuex';
+import uniIcons from '@/components/uni-icons/uni-icons.vue';
 export default {
+	components:{uniIcons},
 	computed: {
 		...mapState(['shotId', 'redId'])
 	},
