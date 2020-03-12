@@ -122,7 +122,7 @@ const store = new Vuex.Store({
 				});
 			});
 		},
-		register({state,commit,dispatch}, provider={phone:'',invcode:'',authcode:''}) {
+		register({state,commit,dispatch}, provider={phone:'',invcode:''}) {
 			return new Promise((resolve,reject) => {
 				api.$_post('app_member/register', provider).then(res => {
 					if(res.errcode==200){

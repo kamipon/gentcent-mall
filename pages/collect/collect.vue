@@ -30,8 +30,8 @@
 						</view>
 						<view class="item-right">
 							<text class=" title" @click="navTo('/pages/product/product?id='+item.goods_id)">{{item.goods_name}}</text>
-							<text class="attr">原价：¥{{item.min_normal_price}}</text>
-							<text class="price">券后价：¥{{item.min_group_price}}</text>
+							<text class="attr">原价：¥{{(item.min_normal_price / 100) | toFiexd}}</text>
+							<text class="price">券后价：¥{{(item.min_group_price / 100) | toFiexd}}</text>
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
 					</view>

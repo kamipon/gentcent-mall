@@ -86,7 +86,6 @@
 			//一级分类点击
 			tabtap(item,index){
 				this.currentId = item.id;
-                console.log("+++++++++++++")
 				this.current = index;
 			},
 			change(e){
