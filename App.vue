@@ -15,35 +15,34 @@ export default {
 		}
 		// #endif
 		// #ifdef MP-WEIXIN
-		// uni.getUserInfo({
-		// 	provider: 'weixin',
-		// 	success: res => {
-		// 		uni.login({
-		// 			provider: 'weixin',
-		// 			success: loginRes => {
-		// 				this.$_get('app_WXLogin/login', {
-		// 					code: loginRes.code,
-		// 					avatarUrl: res.userInfo.avatarUrl,
-		// 					gender: res.userInfo.gender,
-		// 					nickName: res.userInfo.nickName
-		// 				}).then(res3 => {
-		// 					console.log(res3);
-		// 					if (res3.flag) {
-		// 						if (!res3.register) {
-		// 							//用户存在 直接登录
-		// 							this.login({ wxMember: res3.wxMember });
-		// 						}
-		// 					} else {
-		// 						this.$api.msg(res3.msg);
-		// 					}
-		// 				});
-		// 			}
-		// 		});
-		// 	},
-		// 	fail(res) {
-		// 		console.log(res);
-		// 	}
-		// });
+		uni.getUserInfo({
+			provider: 'weixin',
+			success: res => {
+				uni.login({
+					provider: 'weixin',
+					success: loginRes => {
+						this.$_get('app_WXLogin/login', {
+							code: loginRes.code,
+							avatarUrl: res.userInfo.avatarUrl,
+							gender: res.userInfo.gender,
+							nickName: res.userInfo.nickName
+						}).then(res3 => {
+							if (res3.flag) {
+								if (!res3.register) {
+									//用户存在 直接登录
+									this.login({ wxMember: res3.wxMember });
+								}
+							} else {
+								this.$api.msg(res3.msg);
+							}
+						});
+					}
+				});
+			},
+			fail(res) {
+				console.log(res);
+			}
+		});
 		// #endif
 	},
 	onShow: function() {

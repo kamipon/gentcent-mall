@@ -23,6 +23,9 @@ const store = new Vuex.Store({
 		setRedId(state,v){
 		    state.redId=v
 		},
+		setShotId(state,v){
+		    state.shotId=v
+		},
 		login(state, provider) {
 			state.hasLogin = true;
 			state.userInfo = provider.member;
@@ -77,19 +80,9 @@ const store = new Vuex.Store({
 						commit('login',{member:res.member,token:res.token});
 						resolve(res);
 					}else{
-						uni.showToast({icon:"none",title: res.msg});
 						uni.removeStorage({key: "token"});
 						if (res.errcode == 10008) {
-							uni.reLaunch({
-								url: "/pages/public/register",
-								success() {
-									commit("setRedId", redId);
-									uni.showToast({
-										icon: "none",
-										title: res.msg
-									});
-								}
-							})
+							commit("setRedId", redId);
 						}
 						reject(res);
 					}

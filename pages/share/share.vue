@@ -67,7 +67,7 @@
                }
             },
             getUrl(){
-                this.url = this.domainName+`web/pages/share/share?shotId=${this.userInfo.shotId}`
+                this.url = this.domainName+`web/pages/index/index?shotId=${this.userInfo.shotId}`
                 this.getQr();
             },
             getQr(){

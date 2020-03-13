@@ -21,7 +21,7 @@ export default{
         let p ;
         console.log(this.hasLogin)
         if(this.hasLogin){
-            p = this.share.path+`?shotId=${this.userInfo.shotId}`
+            p = this.share.path2+`?shotId=${this.userInfo.shotId}`
         }else{
             p = this.share.path2
         }

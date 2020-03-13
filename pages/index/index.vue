@@ -182,13 +182,16 @@ export default {
 			this.showScrollToTopBtn = false;
 		}
 	},
-	onLoad({ redId }) {
-		this.$store.commit('setRedId', redId);
-		setTimeout(() => {
-			if (redId) {
-				this.loginWithRedId(redId);
-			}
-		}, 500);
+	onLoad(option) {
+		if (option.redId) {
+			this.$store.commit('setRedId', option.redId);
+			setTimeout(() => {
+				this.loginWithRedId(option.redId);
+			}, 500);
+		}
+		if (option.shotId) {
+			this.$store.commit('setShotId', option.shotId);
+		}
 
 		var snum = 0;
 		uni.showLoading({
